@@ -1,27 +1,27 @@
-(define (domain redflix-ext1)
-  (:requirements :strips :typing :negative-preconditions :universal-preconditions)
+(define (domain ricorico-base)
+  (:requirements :strips :typing :universal-preconditions)
 
-  (:types contingut)
+  (:types first second day)
 
   (:predicates
-    (predecessor?p - contingut?c - contingut)
-    (vist?c - contingut)
-    (pendent?c - contingut)
-    (originalmente-pendent?c - contingut)
+    (incompatible ?f - first ?s - second)
+    (asigned ?d - day ?f - first ?s - second)
+    (repetidoFirst ?f - first)
+    (repetidoSecond ?s - second)
   )
 
-  (:action visualitzar
-    :parameters (?c - contingut)
-    :precondition (and
-      (pendent?c)
-      (not (vist?c))
-      (forall (?p - contingut)
-        (imply (predecessor?p?c) (vist?p))
-      )
-    )
-    :effect (and
-      (vist?c)
-      (not (pendent?c))
-    )
+  (:action asignar_menu
+    :parameters (?d - day ?f - first ?s - second)
+    :precondition 
+    (and
+	 (not (asigned ?d ?f ?s))
+     (not (incompatible ?f ?s))
+     (not (repetidoFirst ?f))
+     (not (repetidoSecond ?s))
+	)
+    :effect 
+	  (and (asigned ?d ?f ?s)
+      (and(repetidoFirst ?f)
+      (repetidoSecond ?s)))
   )
 )
