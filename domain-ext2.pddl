@@ -49,8 +49,8 @@
 
 	)
     :effect 
-	  (asigned ?d ?f ?s)
-        (repetidoFirst ?f)
-        (repetidoSecond ?s)
+	   (and (asigned ?d ?f ?s)
+      (repetidoFirst ?f)
+      (repetidoSecond ?s))
   )
 )

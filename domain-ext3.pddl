@@ -44,7 +44,7 @@
 	)
     :effect 
 	  (and (asigned ?d ?f ?s)
-      (and(repetidoFirst ?f)
-      (repetidoSecond ?s)))
+      (repetidoFirst ?f)
+      (repetidoSecond ?s))
   )
 )

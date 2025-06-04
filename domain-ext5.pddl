@@ -52,8 +52,8 @@
      
 
     ;Comprobamos que las calorias del dia esten dentro de los limites
-     (>= (+ (caloriasFirst ?f) (caloriasSecond ?s) 1000)
-     (<= (+ (caloriasFirst ?f) (caloriasSecond ?s) 1000)
+     (>= (+ (caloriasFirst ?f) (caloriasSecond ?s)) 1000)
+     (<= (+ (caloriasFirst ?f) (caloriasSecond ?s)) 1500)
 
 
 
