@@ -1,32 +1,17 @@
-(define (problem redflix-base-joc1)
-  (:domain redflix-base)
+(define (problem ricorico-base-joc1)
+  (:domain ricorico-base)
   (:objects
-    serie1 episodi1 episodi2 episodi3 episodi4 pellicula1 pellicula2 curt1 curt2 - contingut
+    A C - first
+    B D - second
+    Lunes Martes Miercoles Jueves Viernes Sabado Domingo - day
   )
   (:init
-    (predecessor serie1 episodi1)
-    (predecessor episodi1 episodi2)
-    (predecessor episodi2 episodi3)
-    (predecessor episodi3 episodi4)
-    (predecessor pellicula1 pellicula2)
-    (predecessor curt1 curt2)
-
-    (pendent episodi4)
-    (originalmente-pendent episodi4)
-    (pendent pellicula2)
-    (originalmente-pendent pellicula2)
-    (pendent curt2)
-    (originalmente-pendent curt2)
-    
-    ; Contenidos que no son inicialmente pendientes pero deben ser vistos si son predecesores
-    (pendent serie1)
-    (pendent episodi1)
-    (pendent episodi2)
-    (pendent episodi3)
-    (pendent pellicula1)
-    (pendent curt1)
+    (incompatible A D)
+    (incompatible C B)
   )
-  (:goal (forall (?c - contingut)
-             (imply (originalmente-pendent?c) (vist?c)))
+
+  (:goal (forall (?d - day)
+            (exists (?f - first ?s - second) (asigned ?d ?f ?s))
+            )
   )
 )
