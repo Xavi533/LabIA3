@@ -1,27 +1,47 @@
-(define (domain ricorico-base)
-  (:requirements :strips :typing :universal-preconditions)
+(define (domain ricorico-ext1)
+  (:requirements :strips :typing)
 
-  (:types first second day)
-
-  (:predicates
-    (incompatible ?f - first ?s - second)
-    (asigned ?d - day ?f - first ?s - second)
-    (repetidoFirst ?f - first)
-    (repetidoSecond ?s - second)
+  (:types 
+    plato - object
+    primero segundo - plato
+    dia - object
   )
 
-  (:action asignar_menu
-    :parameters (?d - day ?f - first ?s - second)
-    :precondition 
-    (and
-	 (not (asigned ?d ?f ?s))
-     (not (incompatible ?f ?s))
-     (not (repetidoFirst ?f))
-     (not (repetidoSecond ?s))
-	)
-    :effect 
-	  (and (asigned ?d ?f ?s)
-      (and(repetidoFirst ?f)
-      (repetidoSecond ?s)))
+  (:predicates
+    ; Predicados del nivel básico
+    (incompatible ?p - primero ?s - segundo)
+    (dia-tiene-primero ?d - dia ?p - primero)
+    (dia-tiene-segundo ?d - dia ?s - segundo)
+    (dia-asignado ?d - dia)
+    (dia-sin-menu ?d - dia)
+    
+    ; NUEVO: Control de platos usados
+    (primero-usado ?p - primero)
+    (segundo-usado ?s - segundo)
+  )
+
+  ; Acción modificada para marcar platos como usados
+  (:action asignar-menu
+    :parameters (?d - dia ?p - primero ?s - segundo)
+    :precondition (and
+      ; Condiciones del nivel básico
+      (dia-sin-menu ?d)
+      (not (incompatible ?p ?s))
+      
+      ; NUEVO: Los platos no deben estar usados
+      (not (primero-usado ?p))
+      (not (segundo-usado ?s))
+    )
+    :effect (and
+      ; Efectos del nivel básico
+      (dia-tiene-primero ?d ?p)
+      (dia-tiene-segundo ?d ?s)
+      (dia-asignado ?d)
+      (not (dia-sin-menu ?d))
+      
+      ; NUEVO: Marcar platos como usados
+      (primero-usado ?p)
+      (segundo-usado ?s)
+    )
   )
 )

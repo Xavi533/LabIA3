@@ -1,40 +1,59 @@
-(define (problem redflix-ext2-joc1)
-  (:domain redflix-ext2)
+(define (problem ricorico-ext2-joc1)
+  (:domain ricorico-ext2)
+  
   (:objects
-    episodi1 episodi2 episodi3 episodi4 pellicula1 curt1 curt2 curt3 documental1 documental2 - contingut
+    ; Platos primeros
+    paella sopa-verduras ensalada-mixta macarrones gazpacho - primero
+    
+    ; Platos segundos
+    salmon-plancha fabada-asturiana pollo-asado filete-ternera merluza-salsa - segundo
+    
+    ; Días (no necesitamos declararlos como objetos, están hardcoded en las acciones)
+    
+    ; Tipos de plato
+    arroz sopa ensalada pasta - tipo-plato
+    pescado legumbre carne - tipo-plato
   )
+  
   (:init
-    (predecessor episodi1 episodi2)
-    (predecessor episodi2 episodi3)
-    (predecessor episodi3 episodi4)
-    (predecessor pellicula1 curt1)
-    (predecessor curt2 documental1)
-    (predecessor documental2 curt1) ; Según doc, pero podría ser un error y ser (predecessor X documental2)
-    (predecessor curt1 episodi3)
-
-    (paralel episodi1 episodi3) (paralel episodi3 episodi1)
-    (paralel episodi2 episodi4) (paralel episodi4 episodi2)
-    (paralel curt1 curt3) (paralel curt3 curt1)
-    (paralel curt2 curt4) (paralel curt4 curt2) ; curt4 no es un objeto en este problema, error en doc? Usaré los objetos definidos.
-                                             ; El Joc de Prova 1 de Ext2 no lista curt4 como objeto.
-                                             ; Lo omitiré o asumiré que curt4 es un error y no existe o no es paralelo.
-                                             ; Para el PDDL, solo usaré objetos definidos.
-    (paralel documental1 documental2) (paralel documental2 documental1)
-
-    (pendent episodi4) (originalmente-pendent episodi4)
-    (pendent documental1) (originalmente-pendent documental1)
-    (pendent curt1) (originalmente-pendent curt1)
-    (pendent curt3) (originalmente-pendent curt3)
-
-    ; Otros contenidos que deben ser marcados como pendientes para ser procesados
-    (pendent episodi1)
-    (pendent episodi2)
-    (pendent episodi3)
-    (pendent pellicula1)
-    (pendent curt2)
-    (pendent documental2)
+    ; Días necesitan menú
+    (dia-sin-menu-lunes)
+    (dia-sin-menu-martes)
+    (dia-sin-menu-miercoles)
+    (dia-sin-menu-jueves)
+    (dia-sin-menu-viernes)
+    
+    ; Incompatibilidades
+    (incompatible paella fabada-asturiana)
+    (incompatible macarrones fabada-asturiana)
+    (incompatible sopa-verduras salmon-plancha)
+    (incompatible sopa-verduras merluza-salsa)
+    (incompatible gazpacho fabada-asturiana)
+    (incompatible gazpacho filete-ternera)
+    
+    ; Tipos de primeros platos
+    (es-tipo-primero paella arroz)
+    (es-tipo-primero sopa-verduras sopa)
+    (es-tipo-primero ensalada-mixta ensalada)
+    (es-tipo-primero macarrones pasta)
+    (es-tipo-primero gazpacho sopa)
+    
+    ; Tipos de segundos platos
+    (es-tipo-segundo salmon-plancha pescado)
+    (es-tipo-segundo fabada-asturiana legumbre)
+    (es-tipo-segundo pollo-asado carne)
+    (es-tipo-segundo filete-ternera carne)
+    (es-tipo-segundo merluza-salsa pescado)
   )
-  (:goal (forall (?c - contingut)
-             (imply (originalmente-pendent?c) (vist?c)))
+
+  (:goal 
+    (and
+      ; Todos los días deben tener menú asignado
+      (dia-asignado-lunes)
+      (dia-asignado-martes)
+      (dia-asignado-miercoles)
+      (dia-asignado-jueves)
+      (dia-asignado-viernes)
+    )
   )
 )

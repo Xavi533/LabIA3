@@ -1,5 +1,5 @@
-(define (problem ricorico-ext4-joc1)
-  (:domain ricorico-ext4)
+(define (problem ricorico-ext5-joc1)
+  (:domain ricorico-ext5)
   
   (:objects
     ; Platos primeros
@@ -21,7 +21,7 @@
     (dia-sin-menu-jueves)
     (dia-sin-menu-viernes)
     
-    ; Incompatibilidades (reducidas para hacer el problema solvable)
+    ; Incompatibilidades (reducidas para solubilidad)
     (incompatible paella fabada-asturiana)
     (incompatible sopa-verduras salmon-plancha)
     (incompatible gazpacho fabada-asturiana)
@@ -40,27 +40,43 @@
     (es-tipo-segundo filete-ternera carne)
     (es-tipo-segundo merluza-salsa pescado)
     
-    ; NUEVO: Calorías de cada plato
-    ; Primeros (ajustados para más flexibilidad)
+    ; Calorías de cada plato
+    ; Primeros
     (= (calorias-primero paella) 600)
     (= (calorias-primero sopa-verduras) 350)
     (= (calorias-primero ensalada-mixta) 300)
     (= (calorias-primero macarrones) 550)
     (= (calorias-primero gazpacho) 250)
     
-    ; Segundos (ajustados para cumplir 1000-1500)
+    ; Segundos
     (= (calorias-segundo salmon-plancha) 700)
     (= (calorias-segundo fabada-asturiana) 750)
     (= (calorias-segundo pollo-asado) 650)
     (= (calorias-segundo filete-ternera) 800)
     (= (calorias-segundo merluza-salsa) 600)
     
-    ; Inicializar contadores de calorías por día
+    ; NUEVO: Precios de cada plato (en euros)
+    ; Primeros (precios variados para optimización)
+    (= (precio-primero paella) 8)
+    (= (precio-primero sopa-verduras) 3)
+    (= (precio-primero ensalada-mixta) 4)
+    (= (precio-primero macarrones) 5)
+    (= (precio-primero gazpacho) 3.5)
+    
+    ; Segundos 
+    (= (precio-segundo salmon-plancha) 12)
+    (= (precio-segundo fabada-asturiana) 6)
+    (= (precio-segundo pollo-asado) 7)
+    (= (precio-segundo filete-ternera) 10)
+    (= (precio-segundo merluza-salsa) 9)
+    
+    ; Inicializar contadores
     (= (calorias-dia-lunes) 0)
     (= (calorias-dia-martes) 0)
     (= (calorias-dia-miercoles) 0)
     (= (calorias-dia-jueves) 0)
     (= (calorias-dia-viernes) 0)
+    (= (total-cost) 0)
   )
 
   (:goal 
@@ -74,5 +90,6 @@
     )
   )
   
-  ; NOTA: El control de calorías (1000-1500) está en las precondiciones de las acciones
+  ; NUEVO: Métrica para minimizar el coste total
+  (:metric minimize (total-cost))
 )

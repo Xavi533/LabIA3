@@ -1,10 +1,10 @@
-(define (problem ricorico-ext1-joc1)
+(define (problem ricorico-ext1-joc2)
   (:domain ricorico-ext1)
   
   (:objects
-    ; Necesitamos al menos 5 primeros y 5 segundos diferentes
-    paella sopa-verduras ensalada-mixta macarrones gazpacho - primero
-    salmon-plancha fabada-asturiana pollo-asado filete-ternera merluza-salsa - segundo
+    ; Exactamente 5 primeros y 5 segundos para forzar uso único
+    crema-calabaza lentejas-estofadas arroz-tres-delicias fideos-marinera tortilla-patatas - primero
+    bacalao-horno albondigas-salsa pechuga-plancha cordero-asado calamar-romana - segundo
     
     ; Días laborables
     lunes martes miercoles jueves viernes - dia
@@ -18,13 +18,11 @@
     (dia-sin-menu jueves)
     (dia-sin-menu viernes)
     
-    ; Incompatibilidades (las mismas del nivel básico)
-    (incompatible paella fabada-asturiana)
-    (incompatible macarrones fabada-asturiana)
-    (incompatible sopa-verduras salmon-plancha)
-    (incompatible sopa-verduras merluza-salsa)
-    (incompatible gazpacho fabada-asturiana)
-    (incompatible gazpacho filete-ternera)
+    ; Incompatibilidades estratégicas para asegurar solución
+    ; Reducidas respecto al base para garantizar que existe solución
+    (incompatible lentejas-estofadas albondigas-salsa)
+    (incompatible tortilla-patatas calamar-romana)
+    (incompatible fideos-marinera cordero-asado)
     
     ; Los platos empiezan sin usar (implícito por ausencia del predicado)
   )
