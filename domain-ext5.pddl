@@ -35,6 +35,7 @@
     
     ; Orden de días
     (siguiente-dia ?d1 - dia ?d2 - dia)
+    (primer-dia ?d - dia)
   )
 
   (:functions
@@ -86,6 +87,38 @@
     )
   )
 
+     ; Acción genérica que funciona para cualquier día
+  (:action asignar-menu-primer-dia
+    :parameters (?d - dia ?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato)
+    :precondition (and
+      ; Condiciones básicas
+      (dia-sin-menu ?d)
+      (primer-dia ?d)
+      (not (incompatible ?p ?s))
+      (not (primero-usado ?p))
+      (not (segundo-usado ?s))
+      
+      ; El plato tiene los tipos correctos
+      (es-tipo-primero ?p ?tp)
+      (es-tipo-segundo ?s ?ts)
+    )
+    :effect (and
+      ; Efectos básicos
+      (dia-tiene-primero ?d ?p)
+      (dia-tiene-segundo ?d ?s)
+      (dia-asignado ?d)
+      (not (dia-sin-menu ?d))
+      
+      ; Marcar platos como usados
+      (primero-usado ?p)
+      (segundo-usado ?s)
+      
+      ; Registrar tipos del día
+      (dia-tiene-tipo-primero ?d ?tp)
+      (dia-tiene-tipo-segundo ?d ?ts)
+    )
+  )
+
   ; Acción genérica con control de calorías y precio
   (:action asignar-menu
     :parameters (?d - dia ?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato ?d-anterior - dia)
@@ -99,14 +132,13 @@
       (es-tipo-segundo ?s ?ts)
       
       ; Verificar día anterior
-      (or
-        (not (siguiente-dia ?d-anterior ?d))
-        (and
+      (and
           (siguiente-dia ?d-anterior ?d)
           (not (dia-tiene-tipo-primero ?d-anterior ?tp))
+          (not (dia-tiene-tipo-segundo ?d-anterior ?tp))
+          (not (dia-tiene-tipo-primero ?d-anterior ?ts))
           (not (dia-tiene-tipo-segundo ?d-anterior ?ts))
         )
-      )
       
       ; Verificar calorías
       (>= (+ (calorias-primero ?p) (calorias-segundo ?s)) 1000)

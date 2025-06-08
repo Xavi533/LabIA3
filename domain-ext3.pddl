@@ -8,11 +8,6 @@
     tipo-plato - object
   )
 
-  (:constants
-    paella - primero
-    jueves - dia  
-  )
-
   (:predicates
     ; Predicados básicos
     (incompatible ?p - primero ?s - segundo)
@@ -35,33 +30,53 @@
     
     ; Orden de días
     (siguiente-dia ?d1 - dia ?d2 - dia)
+    (primer-dia ?d - dia)
+
+    ; NUEVO: Plato concreto en un dia concreto
+    (primero-en-dia ?d - dia ?p - primero)
+    (segundo-en-dia ?d - dia ?s - segundo)
+  )
+  (:action asignar-dia-concreto-primero
+    :parameters (?d - dia ?p - primero)
   )
 
-  ; Acción especial para paella los jueves
-  (:action asignar-paella-jueves
-    :parameters (?s - segundo ?tp - tipo-plato ?ts - tipo-plato ?d-anterior - dia)
+  (:action asignar-dia-concreto-segundo
+    :parameters (?d - dia ?s - segundo)
     :precondition (and
-      (dia-sin-menu jueves)
-      (not (incompatible paella ?s))
-      (not (primero-usado paella))
+	  (dia-sin-menu ?d)
+	  (primero-en-dia ?d ?p)
+	  (segundo-en-dia ?d ?s)
+	)
+  )
+     ; Acción genérica que funciona para cualquier día
+  (:action asignar-menu-primer-dia
+    :parameters (?d - dia ?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato)
+    :precondition (and
+      ; Condiciones básicas
+      (dia-sin-menu ?d)
+      (primer-dia ?d)
+      (not (incompatible ?p ?s))
+      (not (primero-usado ?p))
       (not (segundo-usado ?s))
-      (es-tipo-primero paella ?tp)
-      (es-tipo-segundo ?s ?ts)
       
-      ; Verificar día anterior (miércoles)
-      (siguiente-dia ?d-anterior jueves)
-      (not (dia-tiene-tipo-primero ?d-anterior ?tp))
-      (not (dia-tiene-tipo-segundo ?d-anterior ?ts))
+      ; El plato tiene los tipos correctos
+      (es-tipo-primero ?p ?tp)
+      (es-tipo-segundo ?s ?ts)
     )
     :effect (and
-      (dia-tiene-primero jueves paella)
-      (dia-tiene-segundo jueves ?s)
-      (dia-asignado jueves)
-      (not (dia-sin-menu jueves))
-      (primero-usado paella)
+      ; Efectos básicos
+      (dia-tiene-primero ?d ?p)
+      (dia-tiene-segundo ?d ?s)
+      (dia-asignado ?d)
+      (not (dia-sin-menu ?d))
+      
+      ; Marcar platos como usados
+      (primero-usado ?p)
       (segundo-usado ?s)
-      (dia-tiene-tipo-primero jueves ?tp)
-      (dia-tiene-tipo-segundo jueves ?ts)
+      
+      ; Registrar tipos del día
+      (dia-tiene-tipo-primero ?d ?tp)
+      (dia-tiene-tipo-segundo ?d ?ts)
     )
   )
 
@@ -69,8 +84,6 @@
   (:action asignar-menu
     :parameters (?d - dia ?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato ?d-anterior - dia)
     :precondition (and
-      ; No aplicar a jueves (tiene su propia acción)
-      (not (= ?d jueves))
       
       ; Condiciones básicas
       (dia-sin-menu ?d)
@@ -83,14 +96,13 @@
       (es-tipo-segundo ?s ?ts)
       
       ; Verificar día anterior
-      (or
-        (not (siguiente-dia ?d-anterior ?d))
-        (and
+     (and
           (siguiente-dia ?d-anterior ?d)
           (not (dia-tiene-tipo-primero ?d-anterior ?tp))
+          (not (dia-tiene-tipo-segundo ?d-anterior ?tp))
+          (not (dia-tiene-tipo-primero ?d-anterior ?ts))
           (not (dia-tiene-tipo-segundo ?d-anterior ?ts))
         )
-      )
     )
     :effect (and
       (dia-tiene-primero ?d ?p)
