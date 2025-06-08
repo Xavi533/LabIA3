@@ -8,11 +8,6 @@
     tipo-plato - object
   )
 
-  (:constants
-    paella - primero
-    jueves - dia
-  )
-
   (:predicates
     ; Predicados básicos
     (incompatible ?p - primero ?s - segundo)
@@ -36,6 +31,10 @@
     ; Orden de días
     (siguiente-dia ?d1 - dia ?d2 - dia)
     (primer-dia ?d - dia)
+
+    ; Plato concreto en un dia concreto
+    (primero-en-dia ?d - dia ?p - primero)
+    (segundo-en-dia ?d - dia ?s - segundo)
   )
 
   (:functions
@@ -50,42 +49,71 @@
     (total-cost)
   )
 
-  ; Acción especial para paella los jueves
-  (:action asignar-paella-jueves
-    :parameters (?s - segundo ?tp - tipo-plato ?ts - tipo-plato ?d-anterior - dia)
-    :precondition (and
-      (dia-sin-menu jueves)
-      (not (incompatible paella ?s))
-      (not (primero-usado paella))
-      (not (segundo-usado ?s))
-      (es-tipo-primero paella ?tp)
-      (es-tipo-segundo ?s ?ts)
-      
-      ; Verificar día anterior
-      (siguiente-dia ?d-anterior jueves)
-      (not (dia-tiene-tipo-primero ?d-anterior ?tp))
-      (not (dia-tiene-tipo-segundo ?d-anterior ?ts))
-      
-      ; Verificar calorías
-      (>= (+ (calorias-primero paella) (calorias-segundo ?s)) 1000)
-      (<= (+ (calorias-primero paella) (calorias-segundo ?s)) 1500)
-    )
-    :effect (and
-      (dia-tiene-primero jueves paella)
-      (dia-tiene-segundo jueves ?s)
-      (dia-asignado jueves)
-      (not (dia-sin-menu jueves))
-      (primero-usado paella)
-      (segundo-usado ?s)
-      (dia-tiene-tipo-primero jueves ?tp)
-      (dia-tiene-tipo-segundo jueves ?ts)
-      (increase (calorias-dia jueves) 
-                (+ (calorias-primero paella) (calorias-segundo ?s)))
+  
+  (:action asignar-dia-concreto-primero
+  :parameters (?d - dia ?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato)
+  :precondition (and
+    (dia-sin-menu ?d)
+    (primero-en-dia ?d ?p)
+    (not (segundo-usado ?s))
+    (not (incompatible ?p ?s))
+    (es-tipo-primero ?p ?tp)
+    (es-tipo-segundo ?s ?ts)
+     ; Verificar calorías
+     (>= (+ (calorias-primero ?p) (calorias-segundo ?s)) 1000)
+     (<= (+ (calorias-primero ?p) (calorias-segundo ?s)) 1500)
+  )
+  :effect (and
+    (dia-tiene-primero ?d ?p)
+    (dia-tiene-segundo ?d ?s)
+    (dia-asignado ?d)
+    (not (dia-sin-menu ?d))
+    (primero-usado ?p)
+    (segundo-usado ?s)
+    (dia-tiene-tipo-primero ?d ?tp)
+    (dia-tiene-tipo-segundo ?d ?ts)
+
+     ; NUEVO: Registrar calorías
+      (increase (calorias-dia ?d) 
+                (+ (calorias-primero ?p) (calorias-segundo ?s)))
+       ; NUEVO: Añadir coste
+      (increase (total-cost) 
+                (+ (precio-primero ?p) (precio-segundo ?s)))
+  )
+)
+
+  (:action asignar-dia-concreto-segundo
+  :parameters (?d - dia ?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato)
+  :precondition (and
+    (dia-sin-menu ?d)
+    (segundo-en-dia ?d ?s)
+    (not (primero-usado ?p))
+    (not (incompatible ?p ?s))
+    (es-tipo-primero ?p ?tp)
+    (es-tipo-segundo ?s ?ts)
+     ; Verificar calorías
+     (>= (+ (calorias-primero ?p) (calorias-segundo ?s)) 1000)
+     (<= (+ (calorias-primero ?p) (calorias-segundo ?s)) 1500)
+  )
+  :effect (and
+    (dia-tiene-primero ?d ?p)
+    (dia-tiene-segundo ?d ?s)
+    (dia-asignado ?d)
+    (not (dia-sin-menu ?d))
+    (primero-usado ?p)
+    (segundo-usado ?s)
+    (dia-tiene-tipo-primero ?d ?tp)
+    (dia-tiene-tipo-segundo ?d ?ts)
+
+     ; NUEVO: Registrar calorías
+      (increase (calorias-dia ?d) 
+                (+ (calorias-primero ?p) (calorias-segundo ?s)))
       ; NUEVO: Añadir coste
       (increase (total-cost) 
-                (+ (precio-primero paella) (precio-segundo ?s)))
-    )
+                (+ (precio-primero ?p) (precio-segundo ?s)))
   )
+)
+
 
      ; Acción genérica que funciona para cualquier día
   (:action asignar-menu-primer-dia
@@ -101,6 +129,10 @@
       ; El plato tiene los tipos correctos
       (es-tipo-primero ?p ?tp)
       (es-tipo-segundo ?s ?ts)
+
+       ; Verificar calorías
+      (>= (+ (calorias-primero ?p) (calorias-segundo ?s)) 1000)
+      (<= (+ (calorias-primero ?p) (calorias-segundo ?s)) 1500)
     )
     :effect (and
       ; Efectos básicos
@@ -116,6 +148,13 @@
       ; Registrar tipos del día
       (dia-tiene-tipo-primero ?d ?tp)
       (dia-tiene-tipo-segundo ?d ?ts)
+
+       ; NUEVO: Registrar calorías
+      (increase (calorias-dia ?d) 
+                (+ (calorias-primero ?p) (calorias-segundo ?s)))
+      ; NUEVO: Añadir coste
+      (increase (total-cost) 
+                (+ (precio-primero ?p) (precio-segundo ?s)))
     )
   )
 
@@ -123,8 +162,8 @@
   (:action asignar-menu
     :parameters (?d - dia ?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato ?d-anterior - dia)
     :precondition (and
-      (not (= ?d jueves))
       (dia-sin-menu ?d)
+      (dia-asignado ?d-anterior)
       (not (incompatible ?p ?s))
       (not (primero-usado ?p))
       (not (segundo-usado ?s))

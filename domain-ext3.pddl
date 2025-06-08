@@ -36,18 +36,50 @@
     (primero-en-dia ?d - dia ?p - primero)
     (segundo-en-dia ?d - dia ?s - segundo)
   )
+
   (:action asignar-dia-concreto-primero
-    :parameters (?d - dia ?p - primero)
+  :parameters (?d - dia ?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato)
+  :precondition (and
+    (dia-sin-menu ?d)
+    (primero-en-dia ?d ?p)
+    (not (segundo-usado ?s))
+    (not (incompatible ?p ?s))
+    (es-tipo-primero ?p ?tp)
+    (es-tipo-segundo ?s ?ts)
   )
+  :effect (and
+    (dia-tiene-primero ?d ?p)
+    (dia-tiene-segundo ?d ?s)
+    (dia-asignado ?d)
+    (not (dia-sin-menu ?d))
+    (primero-usado ?p)
+    (segundo-usado ?s)
+    (dia-tiene-tipo-primero ?d ?tp)
+    (dia-tiene-tipo-segundo ?d ?ts)
+  )
+)
 
   (:action asignar-dia-concreto-segundo
-    :parameters (?d - dia ?s - segundo)
-    :precondition (and
-	  (dia-sin-menu ?d)
-	  (primero-en-dia ?d ?p)
-	  (segundo-en-dia ?d ?s)
-	)
+  :parameters (?d - dia ?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato)
+  :precondition (and
+    (dia-sin-menu ?d)
+    (segundo-en-dia ?d ?s)
+    (not (primero-usado ?p))
+    (not (incompatible ?p ?s))
+    (es-tipo-primero ?p ?tp)
+    (es-tipo-segundo ?s ?ts)
   )
+  :effect (and
+    (dia-tiene-primero ?d ?p)
+    (dia-tiene-segundo ?d ?s)
+    (dia-asignado ?d)
+    (not (dia-sin-menu ?d))
+    (primero-usado ?p)
+    (segundo-usado ?s)
+    (dia-tiene-tipo-primero ?d ?tp)
+    (dia-tiene-tipo-segundo ?d ?ts)
+  )
+)
      ; Acción genérica que funciona para cualquier día
   (:action asignar-menu-primer-dia
     :parameters (?d - dia ?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato)
@@ -87,6 +119,7 @@
       
       ; Condiciones básicas
       (dia-sin-menu ?d)
+      (dia-asignado ?d-anterior)
       (not (incompatible ?p ?s))
       (not (primero-usado ?p))
       (not (segundo-usado ?s))

@@ -3,13 +3,13 @@
   
   (:objects
     ; Platos primeros
-    sopa-verduras ensalada-mixta macarrones gazpacho - primero
+    sopa-verduras ensalada-mixta macarrones gazpacho paella - primero
     
     ; Platos segundos
     salmon-plancha fabada-asturiana pollo-asado filete-ternera merluza-salsa - segundo
     
     ; Días
-    lunes martes miercoles viernes - dia
+    lunes martes miercoles jueves viernes - dia
     
     ; Tipos de plato
     arroz sopa ensalada pasta - tipo-plato
@@ -25,7 +25,7 @@
     (dia-sin-menu viernes)
     
     ; Definir orden de días
-    (primero-dia lunes)
+    (primer-dia lunes)
     (siguiente-dia lunes martes)
     (siguiente-dia martes miercoles)
     (siguiente-dia miercoles jueves)

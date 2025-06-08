@@ -25,7 +25,7 @@
     (dia-sin-menu viernes)
     
     ; Definir orden de días
-    (primero-dia lunes)
+    (primer-dia lunes)
     (siguiente-dia lunes martes)
     (siguiente-dia martes miercoles)
     (siguiente-dia miercoles jueves)

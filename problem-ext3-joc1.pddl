@@ -3,13 +3,13 @@
   
   (:objects
     ; Platos primeros (paella es constante, no se declara aquí)
-    sopa-verduras ensalada-mixta macarrones gazpacho - primero
+    sopa-verduras ensalada-mixta macarrones gazpacho paella - primero
     
     ; Platos segundos
     salmon-plancha fabada-asturiana pollo-asado filete-ternera merluza-salsa - segundo
     
     ; Días (jueves es constante, pero incluimos todos para el orden)
-    lunes martes miercoles viernes - dia
+    lunes martes miercoles jueves viernes - dia
     
     ; Tipos de plato
     arroz sopa ensalada pasta - tipo-plato
@@ -25,7 +25,7 @@
     (dia-sin-menu viernes)
     
     ; Definir orden de días
-    (primero-dia lunes)
+    (primer-dia lunes)
     (siguiente-dia lunes martes)
     (siguiente-dia martes miercoles)
     (siguiente-dia miercoles jueves)
@@ -52,6 +52,21 @@
     (es-tipo-segundo pollo-asado carne)
     (es-tipo-segundo filete-ternera carne)
     (es-tipo-segundo merluza-salsa pescado)
+
+    ; Asignación de platos a días
+    (primero-en-dia lunes paella)
+    (primero-en-dia miercoles ensalada-mixta)
+
+    (primero-en-dia viernes gazpacho)
+    (primero-usado paella)
+
+    (primero-usado ensalada-mixta)
+
+    (primero-usado gazpacho)
+
+    (dia-tiene-tipo-primero lunes arroz)
+    (dia-tiene-tipo-primero miercoles ensalada)
+    (dia-tiene-tipo-primero viernes sopa)
   )
 
   (:goal 

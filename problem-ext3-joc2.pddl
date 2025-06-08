@@ -3,13 +3,13 @@
   
   (:objects
     ; Platos primeros (paella es constante)
-    crema-calabaza lentejas-estofadas arroz-tres-delicias tortilla-patatas - primero
+    crema-calabaza lentejas-estofadas arroz-tres-delicias tortilla-patatas paella - primero
     
     ; Platos segundos
     bacalao-horno albondigas-salsa pechuga-plancha cordero-asado calamar-romana - segundo
     
     ; Días (jueves es constante)
-    lunes martes miercoles viernes - dia
+    lunes martes miercoles jueves viernes - dia
     
     ; Tipos de plato
     arroz crema legumbre huevo - tipo-plato
@@ -25,7 +25,7 @@
     (dia-sin-menu viernes)
     
     ; Definir orden de días
-    (primero-dia lunes)
+    (primer-dia lunes)
     (siguiente-dia lunes martes)
     (siguiente-dia martes miercoles)
     (siguiente-dia miercoles jueves)
