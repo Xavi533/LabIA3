@@ -1,15 +1,7 @@
-#!/usr/bin/env python3
-"""
-Generador Simple de Problemas para RicoRico
-Genera problemas PDDL aleatorios para cada extensión
-"""
-
 import random
 import sys
 
-# Base de datos de platos
 PRIMEROS = [
-    # (nombre, tipo, calorias, precio)
     ("paella", "arroz", 650, 8),
     ("arroz-negro", "arroz", 600, 7),
     ("sopa-verduras", "sopa", 350, 3),
@@ -25,8 +17,7 @@ PRIMEROS = [
 ]
 
 SEGUNDOS = [
-    # (nombre, tipo, calorias, precio)
-    ("salmon-plancha", "pescado", 700, 12),
+    ("salmon-plancha", "pescado", 700, 12), #(los dos ultimos son calorias, precio)
     ("merluza-salsa", "pescado", 600, 9),
     ("bacalao-horno", "pescado", 550, 11),
     ("pollo-asado", "carne", 650, 7),
