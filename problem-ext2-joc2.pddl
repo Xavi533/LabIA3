@@ -2,26 +2,35 @@
   (:domain ricorico-ext2)
   
   (:objects
-    ; Platos primeros con tipos variados
+    ; Platos primeros
     crema-calabaza lentejas-estofadas arroz-tres-delicias fideos-marinera tortilla-patatas - primero
     
-    ; Platos segundos con tipos variados
+    ; Platos segundos
     bacalao-horno albondigas-salsa pechuga-plancha cordero-asado calamar-romana - segundo
     
-    ; Tipos de plato diferentes
+    ; Días
+    lunes martes miercoles jueves viernes - dia
+    
+    ; Tipos de plato
     crema legumbre arroz pasta huevo - tipo-plato
     pescado carne frito - tipo-plato
   )
   
   (:init
     ; Días necesitan menú
-    (dia-sin-menu-lunes)
-    (dia-sin-menu-martes)
-    (dia-sin-menu-miercoles)
-    (dia-sin-menu-jueves)
-    (dia-sin-menu-viernes)
+    (dia-sin-menu lunes)
+    (dia-sin-menu martes)
+    (dia-sin-menu miercoles)
+    (dia-sin-menu jueves)
+    (dia-sin-menu viernes)
     
-    ; Incompatibilidades básicas
+    ; Definir orden de días
+    (siguiente-dia lunes martes)
+    (siguiente-dia martes miercoles)
+    (siguiente-dia miercoles jueves)
+    (siguiente-dia jueves viernes)
+    
+    ; Incompatibilidades
     (incompatible lentejas-estofadas albondigas-salsa)
     (incompatible tortilla-patatas calamar-romana)
     (incompatible fideos-marinera cordero-asado)
@@ -43,12 +52,11 @@
 
   (:goal 
     (and
-      ; Todos los días deben tener menú asignado
-      (dia-asignado-lunes)
-      (dia-asignado-martes)
-      (dia-asignado-miercoles)
-      (dia-asignado-jueves)
-      (dia-asignado-viernes)
+      (dia-asignado lunes)
+      (dia-asignado martes)
+      (dia-asignado miercoles)
+      (dia-asignado jueves)
+      (dia-asignado viernes)
     )
   )
 )

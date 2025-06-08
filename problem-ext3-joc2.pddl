@@ -2,11 +2,14 @@
   (:domain ricorico-ext3)
   
   (:objects
-    ; Platos primeros (paella debe estar incluida para el jueves)
-    paella crema-calabaza lentejas-estofadas arroz-tres-delicias tortilla-patatas - primero
+    ; Platos primeros (paella es constante)
+    crema-calabaza lentejas-estofadas arroz-tres-delicias tortilla-patatas - primero
     
     ; Platos segundos
     bacalao-horno albondigas-salsa pechuga-plancha cordero-asado calamar-romana - segundo
+    
+    ; Días (jueves es constante)
+    lunes martes miercoles viernes - dia
     
     ; Tipos de plato
     arroz crema legumbre huevo - tipo-plato
@@ -15,13 +18,19 @@
   
   (:init
     ; Días necesitan menú
-    (dia-sin-menu-lunes)
-    (dia-sin-menu-martes)
-    (dia-sin-menu-miercoles)
-    (dia-sin-menu-jueves)
-    (dia-sin-menu-viernes)
+    (dia-sin-menu lunes)
+    (dia-sin-menu martes)
+    (dia-sin-menu miercoles)
+    (dia-sin-menu jueves)
+    (dia-sin-menu viernes)
     
-    ; Incompatibilidades ajustadas para garantizar solución con paella
+    ; Definir orden de días
+    (siguiente-dia lunes martes)
+    (siguiente-dia martes miercoles)
+    (siguiente-dia miercoles jueves)
+    (siguiente-dia jueves viernes)
+    
+    ; Incompatibilidades
     (incompatible paella albondigas-salsa)
     (incompatible paella cordero-asado)
     (incompatible lentejas-estofadas albondigas-salsa)
@@ -41,19 +50,15 @@
     (es-tipo-segundo pechuga-plancha carne)
     (es-tipo-segundo cordero-asado carne)
     (es-tipo-segundo calamar-romana frito)
-    
-    ; NOTA: La obligación de paella los jueves está implementada
-    ; en el dominio mediante la acción asignar-paella-jueves
   )
 
   (:goal 
     (and
-      ; Todos los días deben tener menú asignado
-      (dia-asignado-lunes)
-      (dia-asignado-martes)
-      (dia-asignado-miercoles)
-      (dia-asignado-jueves)
-      (dia-asignado-viernes)
+      (dia-asignado lunes)
+      (dia-asignado martes)
+      (dia-asignado miercoles)
+      (dia-asignado jueves)
+      (dia-asignado viernes)
     )
   )
 )

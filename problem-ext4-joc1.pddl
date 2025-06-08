@@ -3,10 +3,13 @@
   
   (:objects
     ; Platos primeros
-    paella sopa-verduras ensalada-mixta macarrones gazpacho - primero
+    sopa-verduras ensalada-mixta macarrones gazpacho - primero
     
     ; Platos segundos
     salmon-plancha fabada-asturiana pollo-asado filete-ternera merluza-salsa - segundo
+    
+    ; Días
+    lunes martes miercoles viernes - dia
     
     ; Tipos de plato
     arroz sopa ensalada pasta - tipo-plato
@@ -15,40 +18,43 @@
   
   (:init
     ; Días necesitan menú
-    (dia-sin-menu-lunes)
-    (dia-sin-menu-martes)
-    (dia-sin-menu-miercoles)
-    (dia-sin-menu-jueves)
-    (dia-sin-menu-viernes)
+    (dia-sin-menu lunes)
+    (dia-sin-menu martes)
+    (dia-sin-menu miercoles)
+    (dia-sin-menu jueves)
+    (dia-sin-menu viernes)
     
-    ; Incompatibilidades (reducidas para hacer el problema solvable)
+    ; Definir orden de días
+    (siguiente-dia lunes martes)
+    (siguiente-dia martes miercoles)
+    (siguiente-dia miercoles jueves)
+    (siguiente-dia jueves viernes)
+    
+    ; Incompatibilidades (reducidas)
     (incompatible paella fabada-asturiana)
     (incompatible sopa-verduras salmon-plancha)
     (incompatible gazpacho fabada-asturiana)
     
-    ; Tipos de primeros platos
+    ; Tipos de platos
     (es-tipo-primero paella arroz)
     (es-tipo-primero sopa-verduras sopa)
     (es-tipo-primero ensalada-mixta ensalada)
     (es-tipo-primero macarrones pasta)
     (es-tipo-primero gazpacho sopa)
     
-    ; Tipos de segundos platos
     (es-tipo-segundo salmon-plancha pescado)
     (es-tipo-segundo fabada-asturiana legumbre)
     (es-tipo-segundo pollo-asado carne)
     (es-tipo-segundo filete-ternera carne)
     (es-tipo-segundo merluza-salsa pescado)
     
-    ; NUEVO: Calorías de cada plato
-    ; Primeros (ajustados para más flexibilidad)
+    ; Calorías de cada plato
     (= (calorias-primero paella) 600)
     (= (calorias-primero sopa-verduras) 350)
     (= (calorias-primero ensalada-mixta) 300)
     (= (calorias-primero macarrones) 550)
     (= (calorias-primero gazpacho) 250)
     
-    ; Segundos (ajustados para cumplir 1000-1500)
     (= (calorias-segundo salmon-plancha) 700)
     (= (calorias-segundo fabada-asturiana) 750)
     (= (calorias-segundo pollo-asado) 650)
@@ -56,23 +62,20 @@
     (= (calorias-segundo merluza-salsa) 600)
     
     ; Inicializar contadores de calorías por día
-    (= (calorias-dia-lunes) 0)
-    (= (calorias-dia-martes) 0)
-    (= (calorias-dia-miercoles) 0)
-    (= (calorias-dia-jueves) 0)
-    (= (calorias-dia-viernes) 0)
+    (= (calorias-dia lunes) 0)
+    (= (calorias-dia martes) 0)
+    (= (calorias-dia miercoles) 0)
+    (= (calorias-dia jueves) 0)
+    (= (calorias-dia viernes) 0)
   )
 
   (:goal 
     (and
-      ; Todos los días deben tener menú asignado
-      (dia-asignado-lunes)
-      (dia-asignado-martes)
-      (dia-asignado-miercoles)
-      (dia-asignado-jueves)
-      (dia-asignado-viernes)
+      (dia-asignado lunes)
+      (dia-asignado martes)
+      (dia-asignado miercoles)
+      (dia-asignado jueves)
+      (dia-asignado viernes)
     )
   )
-  
-  ; NOTA: El control de calorías (1000-1500) está en las precondiciones de las acciones
 )

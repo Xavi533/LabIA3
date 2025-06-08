@@ -4,12 +4,17 @@
   (:types 
     plato - object
     primero segundo - plato
+    dia - object
     tipo-plato - object
   )
 
   (:predicates
     ; Predicados básicos
     (incompatible ?p - primero ?s - segundo)
+    (dia-tiene-primero ?d - dia ?p - primero)
+    (dia-tiene-segundo ?d - dia ?s - segundo)
+    (dia-asignado ?d - dia)
+    (dia-sin-menu ?d - dia)
     
     ; Control de uso de platos
     (primero-usado ?p - primero)
@@ -19,141 +24,54 @@
     (es-tipo-primero ?p - primero ?t - tipo-plato)
     (es-tipo-segundo ?s - segundo ?t - tipo-plato)
     
-    ; Control por día - sin usar tipo dia
-    (dia-sin-menu-lunes)
-    (dia-sin-menu-martes)
-    (dia-sin-menu-miercoles)
-    (dia-sin-menu-jueves)
-    (dia-sin-menu-viernes)
+    ; NUEVO: Control de tipos por día
+    (dia-tiene-tipo-primero ?d - dia ?t - tipo-plato)
+    (dia-tiene-tipo-segundo ?d - dia ?t - tipo-plato)
     
-    (dia-asignado-lunes)
-    (dia-asignado-martes)
-    (dia-asignado-miercoles)
-    (dia-asignado-jueves)
-    (dia-asignado-viernes)
-    
-    ; Tipos asignados por día
-    (lunes-tiene-tipo-primero ?t - tipo-plato)
-    (lunes-tiene-tipo-segundo ?t - tipo-plato)
-    (martes-tiene-tipo-primero ?t - tipo-plato)
-    (martes-tiene-tipo-segundo ?t - tipo-plato)
-    (miercoles-tiene-tipo-primero ?t - tipo-plato)
-    (miercoles-tiene-tipo-segundo ?t - tipo-plato)
-    (jueves-tiene-tipo-primero ?t - tipo-plato)
-    (jueves-tiene-tipo-segundo ?t - tipo-plato)
-    (viernes-tiene-tipo-primero ?t - tipo-plato)
-    (viernes-tiene-tipo-segundo ?t - tipo-plato)
+    ; NUEVO: Orden de días para controlar consecutivos
+    (siguiente-dia ?d1 - dia ?d2 - dia)
   )
 
-  (:action asignar-menu-lunes
-    :parameters (?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato)
+  ; Acción genérica que funciona para cualquier día
+  (:action asignar-menu
+    :parameters (?d - dia ?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato ?d-anterior - dia)
     :precondition (and
-      (dia-sin-menu-lunes)
+      ; Condiciones básicas
+      (dia-sin-menu ?d)
       (not (incompatible ?p ?s))
       (not (primero-usado ?p))
       (not (segundo-usado ?s))
+      
+      ; El plato tiene los tipos correctos
       (es-tipo-primero ?p ?tp)
       (es-tipo-segundo ?s ?ts)
+      
+      ; NUEVO: Verificar día anterior (si existe)
+      (or
+        ; Es el primer día (lunes no tiene anterior)
+        (not (siguiente-dia ?d-anterior ?d))
+        ; O el día anterior existe y no repite tipos
+        (and
+          (siguiente-dia ?d-anterior ?d)
+          (not (dia-tiene-tipo-primero ?d-anterior ?tp))
+          (not (dia-tiene-tipo-segundo ?d-anterior ?ts))
+        )
+      )
     )
     :effect (and
-      (dia-asignado-lunes)
-      (not (dia-sin-menu-lunes))
+      ; Efectos básicos
+      (dia-tiene-primero ?d ?p)
+      (dia-tiene-segundo ?d ?s)
+      (dia-asignado ?d)
+      (not (dia-sin-menu ?d))
+      
+      ; Marcar platos como usados
       (primero-usado ?p)
       (segundo-usado ?s)
-      (lunes-tiene-tipo-primero ?tp)
-      (lunes-tiene-tipo-segundo ?ts)
-    )
-  )
-
-  (:action asignar-menu-martes
-    :parameters (?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato)
-    :precondition (and
-      (dia-sin-menu-martes)
-      (not (incompatible ?p ?s))
-      (not (primero-usado ?p))
-      (not (segundo-usado ?s))
-      (es-tipo-primero ?p ?tp)
-      (es-tipo-segundo ?s ?ts)
-      ; No repetir tipo del lunes
-      (not (lunes-tiene-tipo-primero ?tp))
-      (not (lunes-tiene-tipo-segundo ?ts))
-    )
-    :effect (and
-      (dia-asignado-martes)
-      (not (dia-sin-menu-martes))
-      (primero-usado ?p)
-      (segundo-usado ?s)
-      (martes-tiene-tipo-primero ?tp)
-      (martes-tiene-tipo-segundo ?ts)
-    )
-  )
-
-  (:action asignar-menu-miercoles
-    :parameters (?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato)
-    :precondition (and
-      (dia-sin-menu-miercoles)
-      (not (incompatible ?p ?s))
-      (not (primero-usado ?p))
-      (not (segundo-usado ?s))
-      (es-tipo-primero ?p ?tp)
-      (es-tipo-segundo ?s ?ts)
-      ; No repetir tipo del martes
-      (not (martes-tiene-tipo-primero ?tp))
-      (not (martes-tiene-tipo-segundo ?ts))
-    )
-    :effect (and
-      (dia-asignado-miercoles)
-      (not (dia-sin-menu-miercoles))
-      (primero-usado ?p)
-      (segundo-usado ?s)
-      (miercoles-tiene-tipo-primero ?tp)
-      (miercoles-tiene-tipo-segundo ?ts)
-    )
-  )
-
-  (:action asignar-menu-jueves
-    :parameters (?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato)
-    :precondition (and
-      (dia-sin-menu-jueves)
-      (not (incompatible ?p ?s))
-      (not (primero-usado ?p))
-      (not (segundo-usado ?s))
-      (es-tipo-primero ?p ?tp)
-      (es-tipo-segundo ?s ?ts)
-      ; No repetir tipo del miércoles
-      (not (miercoles-tiene-tipo-primero ?tp))
-      (not (miercoles-tiene-tipo-segundo ?ts))
-    )
-    :effect (and
-      (dia-asignado-jueves)
-      (not (dia-sin-menu-jueves))
-      (primero-usado ?p)
-      (segundo-usado ?s)
-      (jueves-tiene-tipo-primero ?tp)
-      (jueves-tiene-tipo-segundo ?ts)
-    )
-  )
-
-  (:action asignar-menu-viernes
-    :parameters (?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato)
-    :precondition (and
-      (dia-sin-menu-viernes)
-      (not (incompatible ?p ?s))
-      (not (primero-usado ?p))
-      (not (segundo-usado ?s))
-      (es-tipo-primero ?p ?tp)
-      (es-tipo-segundo ?s ?ts)
-      ; No repetir tipo del jueves
-      (not (jueves-tiene-tipo-primero ?tp))
-      (not (jueves-tiene-tipo-segundo ?ts))
-    )
-    :effect (and
-      (dia-asignado-viernes)
-      (not (dia-sin-menu-viernes))
-      (primero-usado ?p)
-      (segundo-usado ?s)
-      (viernes-tiene-tipo-primero ?tp)
-      (viernes-tiene-tipo-segundo ?ts)
+      
+      ; NUEVO: Registrar tipos del día
+      (dia-tiene-tipo-primero ?d ?tp)
+      (dia-tiene-tipo-segundo ?d ?ts)
     )
   )
 )

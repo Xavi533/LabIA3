@@ -8,7 +8,8 @@
     ; Platos segundos
     salmon-plancha fabada-asturiana pollo-asado filete-ternera merluza-salsa - segundo
     
-    ; Días (no necesitamos declararlos como objetos, están hardcoded en las acciones)
+    ; Días
+    lunes martes miercoles jueves viernes - dia
     
     ; Tipos de plato
     arroz sopa ensalada pasta - tipo-plato
@@ -17,11 +18,17 @@
   
   (:init
     ; Días necesitan menú
-    (dia-sin-menu-lunes)
-    (dia-sin-menu-martes)
-    (dia-sin-menu-miercoles)
-    (dia-sin-menu-jueves)
-    (dia-sin-menu-viernes)
+    (dia-sin-menu lunes)
+    (dia-sin-menu martes)
+    (dia-sin-menu miercoles)
+    (dia-sin-menu jueves)
+    (dia-sin-menu viernes)
+    
+    ; NUEVO: Definir orden de días
+    (siguiente-dia lunes martes)
+    (siguiente-dia martes miercoles)
+    (siguiente-dia miercoles jueves)
+    (siguiente-dia jueves viernes)
     
     ; Incompatibilidades
     (incompatible paella fabada-asturiana)
@@ -49,11 +56,11 @@
   (:goal 
     (and
       ; Todos los días deben tener menú asignado
-      (dia-asignado-lunes)
-      (dia-asignado-martes)
-      (dia-asignado-miercoles)
-      (dia-asignado-jueves)
-      (dia-asignado-viernes)
+      (dia-asignado lunes)
+      (dia-asignado martes)
+      (dia-asignado miercoles)
+      (dia-asignado jueves)
+      (dia-asignado viernes)
     )
   )
 )

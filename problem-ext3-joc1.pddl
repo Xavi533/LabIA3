@@ -2,11 +2,14 @@
   (:domain ricorico-ext3)
   
   (:objects
-    ; Platos primeros
-    paella sopa-verduras ensalada-mixta macarrones gazpacho - primero
+    ; Platos primeros (paella es constante, no se declara aquí)
+    sopa-verduras ensalada-mixta macarrones gazpacho - primero
     
     ; Platos segundos
     salmon-plancha fabada-asturiana pollo-asado filete-ternera merluza-salsa - segundo
+    
+    ; Días (jueves es constante, pero incluimos todos para el orden)
+    lunes martes miercoles viernes - dia
     
     ; Tipos de plato
     arroz sopa ensalada pasta - tipo-plato
@@ -15,11 +18,17 @@
   
   (:init
     ; Días necesitan menú
-    (dia-sin-menu-lunes)
-    (dia-sin-menu-martes)
-    (dia-sin-menu-miercoles)
-    (dia-sin-menu-jueves)
-    (dia-sin-menu-viernes)
+    (dia-sin-menu lunes)
+    (dia-sin-menu martes)
+    (dia-sin-menu miercoles)
+    (dia-sin-menu jueves)
+    (dia-sin-menu viernes)
+    
+    ; Definir orden de días
+    (siguiente-dia lunes martes)
+    (siguiente-dia martes miercoles)
+    (siguiente-dia miercoles jueves)
+    (siguiente-dia jueves viernes)
     
     ; Incompatibilidades
     (incompatible paella fabada-asturiana)
@@ -42,19 +51,15 @@
     (es-tipo-segundo pollo-asado carne)
     (es-tipo-segundo filete-ternera carne)
     (es-tipo-segundo merluza-salsa pescado)
-    
-    ; NOTA: La obligación de paella los jueves está hardcoded en el dominio
-    ; mediante la acción asignar-paella-jueves
   )
 
   (:goal 
     (and
-      ; Todos los días deben tener menú asignado
-      (dia-asignado-lunes)
-      (dia-asignado-martes)
-      (dia-asignado-miercoles)
-      (dia-asignado-jueves)
-      (dia-asignado-viernes)
+      (dia-asignado lunes)
+      (dia-asignado martes)
+      (dia-asignado miercoles)
+      (dia-asignado jueves)
+      (dia-asignado viernes)
     )
   )
 )
