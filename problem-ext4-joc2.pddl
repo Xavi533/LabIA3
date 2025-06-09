@@ -61,13 +61,8 @@
     (= (calorias-segundo pechuga-plancha) 600)
     (= (calorias-segundo cordero-asado) 850)
     (= (calorias-segundo calamar-romana) 650)
-    
-    ; Inicializar contadores
-    (= (calorias-dia lunes) 0)
-    (= (calorias-dia martes) 0)
-    (= (calorias-dia miercoles) 0)
-    (= (calorias-dia jueves) 0)
-    (= (calorias-dia viernes) 0)
+
+
   )
 
   (:goal 

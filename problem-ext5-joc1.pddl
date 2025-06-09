@@ -76,12 +76,6 @@
     (= (precio-segundo merluza-salsa) 9)
     
     ; Inicializar contadores
-    (= (calorias-dia lunes) 0)
-    (= (calorias-dia martes) 0)
-    (= (calorias-dia miercoles) 0)
-    (= (calorias-dia jueves) 0)
-    (= (calorias-dia viernes) 0)
-    (= (total-cost) 0)
   )
 
   (:goal 

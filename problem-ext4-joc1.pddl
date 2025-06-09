@@ -61,13 +61,7 @@
     (= (calorias-segundo pollo-asado) 650)
     (= (calorias-segundo filete-ternera) 800)
     (= (calorias-segundo merluza-salsa) 600)
-    
-    ; Inicializar contadores de calorías por día
-    (= (calorias-dia lunes) 0)
-    (= (calorias-dia martes) 0)
-    (= (calorias-dia miercoles) 0)
-    (= (calorias-dia jueves) 0)
-    (= (calorias-dia viernes) 0)
+  
   )
 
   (:goal 

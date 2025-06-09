@@ -74,14 +74,6 @@
     (= (precio-segundo pechuga-plancha) 6.5)
     (= (precio-segundo cordero-asado) 15)
     (= (precio-segundo calamar-romana) 8)
-    
-    ; Inicializar contadores
-    (= (calorias-dia lunes) 0)
-    (= (calorias-dia martes) 0)
-    (= (calorias-dia miercoles) 0)
-    (= (calorias-dia jueves) 0)
-    (= (calorias-dia viernes) 0)
-    (= (total-cost) 0)
   )
 
   (:goal 
