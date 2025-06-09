@@ -1,347 +1,315 @@
+#!/usr/bin/env python3
+"""
+Generador aleatorio de problemas PDDL para la práctica RicoRico
+Genera problemas con datos aleatorios para testing
+"""
+
 import random
 import sys
 
-PRIMEROS = [
-    ("paella", "arroz", 650, 8),
-    ("arroz-negro", "arroz", 600, 7),
-    ("sopa-verduras", "sopa", 350, 3),
-    ("gazpacho", "sopa", 250, 3.5),
-    ("crema-calabaza", "crema", 400, 4),
-    ("ensalada-mixta", "ensalada", 300, 4),
-    ("macarrones", "pasta", 550, 5),
-    ("espaguetis", "pasta", 580, 5.5),
-    ("lentejas", "legumbre", 500, 4),
-    ("garbanzos", "legumbre", 480, 4.5),
-    ("tortilla-patatas", "huevo", 450, 4),
-    ("revuelto-setas", "huevo", 420, 5),
-]
-
-SEGUNDOS = [
-    ("salmon-plancha", "pescado", 700, 12),
-    ("merluza-salsa", "pescado", 600, 9),
-    ("bacalao-horno", "pescado", 550, 11),
-    ("pollo-asado", "carne", 650, 7),
-    ("filete-ternera", "carne", 800, 10),
-    ("albondigas", "carne", 700, 5),
-    ("pechuga-plancha", "carne", 600, 6.5),
-    ("cordero-asado", "carne", 850, 15),
-    ("fabada", "legumbre", 750, 6),
-    ("calamar-romana", "frito", 650, 8),
-    ("croquetas", "frito", 600, 6),
-    ("pescadito-frito", "frito", 700, 9),
-]
-
-def generar_base(num_primeros=5, num_segundos=5):
-    """Genera problema para extensión base"""
-    # Seleccionar platos aleatorios
-    primeros = random.sample(PRIMEROS, num_primeros)
-    segundos = random.sample(SEGUNDOS, num_segundos)
+def generar_problema_base(num_primeros=5, num_segundos=5, num_incompatibles=10):
+    """Genera un problema aleatorio para el dominio base"""
     
-    # Generar incompatibilidades (20-30%)
-    incomp = []
+    # Generar nombres aleatorios de platos
+    primeros = [f"primero{i+1}" for i in range(num_primeros)]
+    segundos = [f"segundo{i+1}" for i in range(num_segundos)]
+    dias = ["lunes", "martes", "miercoles", "jueves", "viernes"]
+    
+    # Generar incompatibilidades aleatorias
+    incompatibles = []
+    for _ in range(num_incompatibles):
+        p = random.choice(primeros)
+        s = random.choice(segundos)
+        if (p, s) not in incompatibles:
+            incompatibles.append((p, s))
+    
+    # Construir el problema PDDL
+    problema = "(define (problem ricorico-base-generado)\n"
+    problema += "  (:domain ricorico-base)\n\n"
+    problema += "  (:objects\n"
+    problema += f"    {' '.join(primeros)} - primero\n"
+    problema += f"    {' '.join(segundos)} - segundo\n"
+    problema += f"    {' '.join(dias)} - dia\n"
+    problema += "  )\n\n"
+    problema += "  (:init\n"
+    
+    for dia in dias:
+        problema += f"    (dia-sin-menu {dia})\n"
+    
+    problema += "\n"
+    for p, s in incompatibles:
+        problema += f"    (incompatible {p} {s})\n"
+    
+    problema += "  )\n\n"
+    problema += "  (:goal\n"
+    problema += "    (and\n"
+    for dia in dias:
+        problema += f"      (dia-asignado {dia})\n"
+    problema += "    )\n"
+    problema += "  )\n"
+    problema += ")"
+    
+    return problema
+
+def generar_problema_ext1():
+    """Genera problema para extensión 1 (no repetir platos)"""
+    # Necesitamos exactamente 5 de cada tipo
+    return generar_problema_base(5, 5, random.randint(0, 10))
+
+def generar_problema_ext2(num_primeros=6, num_segundos=6):
+    """Genera problema para extensión 2 (tipos de platos)"""
+    primeros = [f"primero{i+1}" for i in range(num_primeros)]
+    segundos = [f"segundo{i+1}" for i in range(num_segundos)]
+    dias = ["lunes", "martes", "miercoles", "jueves", "viernes"]
+    tipos = ["tipo1", "tipo2", "tipo3", "tipo4"]
+    
+    problema = "(define (problem ricorico-ext2-generado)\n"
+    problema += "  (:domain ricorico-ext2)\n\n"
+    problema += "  (:objects\n"
+    problema += f"    {' '.join(primeros)} - primero\n"
+    problema += f"    {' '.join(segundos)} - segundo\n"
+    problema += f"    {' '.join(dias)} - dia\n"
+    problema += f"    {' '.join(tipos)} - tipo-plato\n"
+    problema += "  )\n\n"
+    problema += "  (:init\n"
+    
+    for dia in dias:
+        problema += f"    (dia-sin-menu {dia})\n"
+    
+    problema += "\n    (primer-dia lunes)\n"
+    for i in range(len(dias)-1):
+        problema += f"    (siguiente-dia {dias[i]} {dias[i+1]})\n"
+    
+    problema += "\n"
+    # Asignar tipos aleatorios
     for p in primeros:
-        for s in segundos:
-            if random.random() < 0.25:  # 25% probabilidad
-                incomp.append((p[0], s[0]))
+        tipo = random.choice(tipos)
+        problema += f"    (es-tipo-primero {p} {tipo})\n"
     
-    # Construir PDDL
-    output = f"""(define (problem ricorico-base-generado)
-  (:domain ricorico-base)
-  
-  (:objects
-    ; Primeros platos
-    {' '.join([p[0] for p in primeros])} - primero
-    
-    ; Segundos platos  
-    {' '.join([s[0] for s in segundos])} - segundo
-    
-    ; Días
-    lunes martes miercoles jueves viernes - dia
-  )
-  
-  (:init
-    ; Días sin menú
-    (dia-sin-menu lunes)
-    (dia-sin-menu martes)
-    (dia-sin-menu miercoles)
-    (dia-sin-menu jueves)
-    (dia-sin-menu viernes)
-    
-    ; Incompatibilidades"""
-    
-    for p, s in incomp:
-        output += f"\n    (incompatible {p} {s})"
-    
-    output += """
-  )
-
-  (:goal 
-    (and
-      (dia-asignado lunes)
-      (dia-asignado martes)
-      (dia-asignado miercoles)
-      (dia-asignado jueves)
-      (dia-asignado viernes)
-    )
-  )
-)"""
-    
-    return output
-
-def generar_ext1():
-    """Genera problema para ext1 (exactamente 5 de cada)"""
-    return generar_base(5, 5).replace("ricorico-base", "ricorico-ext1")
-
-def generar_ext2_3_4_5(extension):
-    """Genera problema para extensiones 2-5"""
-    # Incluir paella si es ext3, ext4 o ext5
-    if extension in ["ext3", "ext4", "ext5"]:
-        # Asegurar que paella está incluida
-        primeros = [p for p in PRIMEROS if p[0] == "paella"][:1]
-        primeros += random.sample([p for p in PRIMEROS if p[0] != "paella"], 4)
-    else:
-        primeros = random.sample(PRIMEROS, 5)
-    
-    segundos = random.sample(SEGUNDOS, 5)
-    
-    # Tipos únicos
-    tipos = list(set([p[1] for p in primeros] + [s[1] for s in segundos]))
-    
-    # Incompatibilidades
-    incomp = []
-    for p in primeros:
-        for s in segundos:
-            if random.random() < 0.2:
-                incomp.append((p[0], s[0]))
-    
-    # Construir PDDL
-    output = f"""(define (problem ricorico-{extension}-generado)
-  (:domain ricorico-{extension})
-  
-  (:objects
-    ; Primeros
-    {' '.join([p[0] for p in primeros])} - primero
-    
-    ; Segundos
-    {' '.join([s[0] for s in segundos])} - segundo
-    
-    ; Días
-    lunes martes miercoles jueves viernes - dia
-    
-    ; Tipos
-    {' '.join(tipos)} - tipo-plato
-  )
-  
-  (:init
-    ; Días sin menú
-    (dia-sin-menu lunes)
-    (dia-sin-menu martes)
-    (dia-sin-menu miercoles)
-    (dia-sin-menu jueves)
-    (dia-sin-menu viernes)
-    
-    ; Orden de días
-    (primer-dia lunes)
-    (siguiente-dia lunes martes)
-    (siguiente-dia martes miercoles)
-    (siguiente-dia miercoles jueves)
-    (siguiente-dia jueves viernes)
-    
-    ; Incompatibilidades"""
-    
-    for p, s in incomp:
-        output += f"\n    (incompatible {p} {s})"
-    
-    output += "\n    \n    ; Tipos de primeros"
-    for p in primeros:
-        output += f"\n    (es-tipo-primero {p[0]} {p[1]})"
-    
-    output += "\n    \n    ; Tipos de segundos"
+    problema += "\n"
     for s in segundos:
-        output += f"\n    (es-tipo-segundo {s[0]} {s[1]})"
+        tipo = random.choice(tipos)
+        problema += f"    (es-tipo-segundo {s} {tipo})\n"
     
-    # Para ext3+: añadir plato obligatorio
-    if extension in ["ext3", "ext4", "ext5"]:
-        # Elegir un día aleatorio y asignar paella
-        dias = ["lunes", "martes", "miercoles", "jueves", "viernes"]
-        dia_paella = random.choice(dias)
-        output += f"\n    \n    ; Plato obligatorio\n    (primero-en-dia {dia_paella} paella)"
-        
-        # Opcionalmente, asignar otro plato obligatorio
-        if random.random() < 0.5:
-            otro_segundo = random.choice(segundos)
-            dias_disponibles = [d for d in dias if d != dia_paella]
-            dia_segundo = random.choice(dias_disponibles)
-            output += f"\n    (segundo-en-dia {dia_segundo} {otro_segundo[0]})"
+    problema += "  )\n\n"
+    problema += "  (:goal\n"
+    problema += "    (and\n"
+    for dia in dias:
+        problema += f"      (dia-asignado {dia})\n"
+    problema += "    )\n"
+    problema += "  )\n"
+    problema += ")"
     
-    # Para ext4 y ext5: añadir calorías
-    if extension in ["ext4", "ext5"]:
-        output += "\n    \n    ; Calorías"
-        for p in primeros:
-            output += f"\n    (= (calorias-primero {p[0]}) {p[2]})"
-        for s in segundos:
-            output += f"\n    (= (calorias-segundo {s[0]}) {s[2]})"
-    
-    # Para ext5: añadir precios
-    if extension == "ext5":
-        output += "\n    \n    ; Precios"
-        for p in primeros:
-            output += f"\n    (= (precio-primero {p[0]}) {p[3]})"
-        for s in segundos:
-            output += f"\n    (= (precio-segundo {s[0]}) {s[3]})"
-        output += "\n    (= (total-cost) 0)"
-    
-    output += """
-  )
+    return problema
 
-  (:goal 
-    (and
-      (dia-asignado lunes)
-      (dia-asignado martes)
-      (dia-asignado miercoles)
-      (dia-asignado jueves)
-      (dia-asignado viernes)
-    )
-  )"""
+def generar_problema_ext3(num_primeros=6, num_segundos=6):
+    """Genera problema para extensión 3 (platos obligatorios)"""
+    primeros = [f"primero{i+1}" for i in range(num_primeros)]
+    segundos = [f"segundo{i+1}" for i in range(num_segundos)]
+    dias = ["lunes", "martes", "miercoles", "jueves", "viernes"]
+    tipos = ["tipo1", "tipo2", "tipo3", "tipo4"]
     
-    if extension == "ext5":
-        output += "\n  \n  (:metric minimize (total-cost))"
+    # Elegir platos obligatorios aleatorios
+    dia_obligatorio = random.choice(dias)
+    primero_obligatorio = random.choice(primeros)
     
-    output += "\n)"
+    problema = "(define (problem ricorico-ext3-generado)\n"
+    problema += "  (:domain ricorico-ext3)\n\n"
+    problema += "  (:objects\n"
+    problema += f"    {' '.join(primeros)} - primero\n"
+    problema += f"    {' '.join(segundos)} - segundo\n"
+    problema += f"    {' '.join(dias)} - dia\n"
+    problema += f"    {' '.join(tipos)} - tipo-plato\n"
+    problema += "  )\n\n"
+    problema += "  (:init\n"
     
-    return output
-
-def generar_ext2():
-    """Genera problema específico para ext2 con más control"""
-    primeros = random.sample(PRIMEROS, 6)  # Más opciones para evitar bloqueos
-    segundos = random.sample(SEGUNDOS, 6)
+    for dia in dias:
+        problema += f"    (dia-sin-menu {dia})\n"
     
-    # Asegurar variedad de tipos
-    tipos_primeros = list(set([p[1] for p in primeros]))
-    tipos_segundos = list(set([s[1] for s in segundos]))
+    problema += "\n    (primer-dia lunes)\n"
+    for i in range(len(dias)-1):
+        problema += f"    (siguiente-dia {dias[i]} {dias[i+1]})\n"
     
-    # Si no hay suficiente variedad, regenerar
-    if len(tipos_primeros) < 3 or len(tipos_segundos) < 3:
-        return generar_ext2()  # Recursión para regenerar
-    
-    tipos = list(set(tipos_primeros + tipos_segundos))
-    
-    # Menos incompatibilidades para ext2 (para no bloquear soluciones)
-    incomp = []
+    problema += "\n"
     for p in primeros:
-        for s in segundos:
-            if random.random() < 0.15:  # Solo 15%
-                incomp.append((p[0], s[0]))
+        tipo = random.choice(tipos)
+        problema += f"    (es-tipo-primero {p} {tipo})\n"
     
-    output = f"""(define (problem ricorico-ext2-generado)
-  (:domain ricorico-ext2)
-  
-  (:objects
-    ; Primeros (6 para más flexibilidad)
-    {' '.join([p[0] for p in primeros])} - primero
-    
-    ; Segundos (6 para más flexibilidad)
-    {' '.join([s[0] for s in segundos])} - segundo
-    
-    ; Días
-    lunes martes miercoles jueves viernes - dia
-    
-    ; Tipos
-    {' '.join(tipos)} - tipo-plato
-  )
-  
-  (:init
-    ; Días sin menú
-    (dia-sin-menu lunes)
-    (dia-sin-menu martes)
-    (dia-sin-menu miercoles)
-    (dia-sin-menu jueves)
-    (dia-sin-menu viernes)
-    
-    ; Orden de días
-    (primer-dia lunes)
-    (siguiente-dia lunes martes)
-    (siguiente-dia martes miercoles)
-    (siguiente-dia miercoles jueves)
-    (siguiente-dia jueves viernes)
-    
-    ; Incompatibilidades (pocas para no bloquear)"""
-    
-    for p, s in incomp:
-        output += f"\n    (incompatible {p} {s})"
-    
-    output += "\n    \n    ; Tipos de primeros"
-    for p in primeros:
-        output += f"\n    (es-tipo-primero {p[0]} {p[1]})"
-    
-    output += "\n    \n    ; Tipos de segundos"
+    problema += "\n"
     for s in segundos:
-        output += f"\n    (es-tipo-segundo {s[0]} {s[1]})"
+        tipo = random.choice(tipos)
+        problema += f"    (es-tipo-segundo {s} {tipo})\n"
     
-    output += """
-  )
-
-  (:goal 
-    (and
-      (dia-asignado lunes)
-      (dia-asignado martes)
-      (dia-asignado miercoles)
-      (dia-asignado jueves)
-      (dia-asignado viernes)
-    )
-  )
-)"""
+    problema += f"\n    (primero-en-dia {dia_obligatorio} {primero_obligatorio})\n"
     
-    return output
+    problema += "  )\n\n"
+    problema += "  (:goal\n"
+    problema += "    (and\n"
+    for dia in dias:
+        problema += f"      (dia-asignado {dia})\n"
+    problema += "    )\n"
+    problema += "  )\n"
+    problema += ")"
+    
+    return problema
 
-# PROGRAMA PRINCIPAL
-if __name__ == "__main__":
+def generar_problema_ext4(num_primeros=7, num_segundos=7):
+    """Genera problema para extensión 4 (control calorías)"""
+    primeros = [f"primero{i+1}" for i in range(num_primeros)]
+    segundos = [f"segundo{i+1}" for i in range(num_segundos)]
+    dias = ["lunes", "martes", "miercoles", "jueves", "viernes"]
+    tipos = ["tipo1", "tipo2", "tipo3", "tipo4"]
+    
+    problema = "(define (problem ricorico-ext4-generado)\n"
+    problema += "  (:domain ricorico-ext4)\n\n"
+    problema += "  (:objects\n"
+    problema += f"    {' '.join(primeros)} - primero\n"
+    problema += f"    {' '.join(segundos)} - segundo\n"
+    problema += f"    {' '.join(dias)} - dia\n"
+    problema += f"    {' '.join(tipos)} - tipo-plato\n"
+    problema += "  )\n\n"
+    problema += "  (:init\n"
+    
+    for dia in dias:
+        problema += f"    (dia-sin-menu {dia})\n"
+    
+    problema += "\n    (primer-dia lunes)\n"
+    for i in range(len(dias)-1):
+        problema += f"    (siguiente-dia {dias[i]} {dias[i+1]})\n"
+    
+    problema += "\n"
+    for p in primeros:
+        tipo = random.choice(tipos)
+        problema += f"    (es-tipo-primero {p} {tipo})\n"
+    
+    problema += "\n"
+    for s in segundos:
+        tipo = random.choice(tipos)
+        problema += f"    (es-tipo-segundo {s} {tipo})\n"
+    
+    # Generar calorías aleatorias
+    problema += "\n"
+    for p in primeros:
+        calorias = random.randint(300, 700)
+        problema += f"    (= (calorias-primero {p}) {calorias})\n"
+    
+    problema += "\n"
+    for s in segundos:
+        calorias = random.randint(400, 800)
+        problema += f"    (= (calorias-segundo {s}) {calorias})\n"
+    
+    problema += "  )\n\n"
+    problema += "  (:goal\n"
+    problema += "    (and\n"
+    for dia in dias:
+        problema += f"      (dia-asignado {dia})\n"
+    problema += "    )\n"
+    problema += "  )\n"
+    problema += ")"
+    
+    return problema
+
+def generar_problema_ext5(num_primeros=8, num_segundos=8):
+    """Genera problema para extensión 5 (optimización precio)"""
+    primeros = [f"primero{i+1}" for i in range(num_primeros)]
+    segundos = [f"segundo{i+1}" for i in range(num_segundos)]
+    dias = ["lunes", "martes", "miercoles", "jueves", "viernes"]
+    tipos = ["tipo1", "tipo2", "tipo3", "tipo4", "tipo5"]
+    
+    problema = "(define (problem ricorico-ext5-generado)\n"
+    problema += "  (:domain ricorico-ext5)\n\n"
+    problema += "  (:objects\n"
+    problema += f"    {' '.join(primeros)} - primero\n"
+    problema += f"    {' '.join(segundos)} - segundo\n"
+    problema += f"    {' '.join(dias)} - dia\n"
+    problema += f"    {' '.join(tipos)} - tipo-plato\n"
+    problema += "  )\n\n"
+    problema += "  (:init\n"
+    
+    for dia in dias:
+        problema += f"    (dia-sin-menu {dia})\n"
+    
+    problema += "\n    (primer-dia lunes)\n"
+    for i in range(len(dias)-1):
+        problema += f"    (siguiente-dia {dias[i]} {dias[i+1]})\n"
+    
+    problema += "\n"
+    for p in primeros:
+        tipo = random.choice(tipos)
+        problema += f"    (es-tipo-primero {p} {tipo})\n"
+    
+    problema += "\n"
+    for s in segundos:
+        tipo = random.choice(tipos)
+        problema += f"    (es-tipo-segundo {s} {tipo})\n"
+    
+    # Calorías aleatorias
+    problema += "\n"
+    for p in primeros:
+        calorias = random.randint(300, 700)
+        problema += f"    (= (calorias-primero {p}) {calorias})\n"
+    
+    problema += "\n"
+    for s in segundos:
+        calorias = random.randint(400, 800)
+        problema += f"    (= (calorias-segundo {s}) {calorias})\n"
+    
+    # Precios aleatorios
+    problema += "\n"
+    for p in primeros:
+        precio = round(random.uniform(3.0, 10.0), 1)
+        problema += f"    (= (precio-primero {p}) {precio})\n"
+    
+    problema += "\n"
+    for s in segundos:
+        precio = round(random.uniform(5.0, 15.0), 1)
+        problema += f"    (= (precio-segundo {s}) {precio})\n"
+    
+    problema += "\n    (= (total-cost) 0)\n"
+    problema += "  )\n\n"
+    problema += "  (:goal\n"
+    problema += "    (and\n"
+    for dia in dias:
+        problema += f"      (dia-asignado {dia})\n"
+    problema += "    )\n"
+    problema += "  )\n\n"
+    problema += "  (:metric minimize (total-cost))\n"
+    problema += ")"
+    
+    return problema
+
+def main():
     if len(sys.argv) < 2:
-        print("Uso: python generador_problemas.py <extension>")
+        print("Uso: python generador.py <extension> [archivo_salida]")
         print("Extensiones: base, ext1, ext2, ext3, ext4, ext5")
-        print("\nEjemplos:")
-        print("  python generador_problemas.py base")
-        print("  python generador_problemas.py ext3")
         sys.exit(1)
     
     extension = sys.argv[1]
     
-    # Establecer semilla aleatoria si se proporciona
-    if len(sys.argv) > 2:
-        random.seed(int(sys.argv[2]))
-        print(f"Usando semilla: {sys.argv[2]}")
-    
-    # Generar según extensión
+    # Generar el problema según la extensión
     if extension == "base":
-        contenido = generar_base()
+        problema = generar_problema_base()
     elif extension == "ext1":
-        contenido = generar_ext1()
+        problema = generar_problema_ext1()
     elif extension == "ext2":
-        contenido = generar_ext2()
-    elif extension in ["ext3", "ext4", "ext5"]:
-        contenido = generar_ext2_3_4_5(extension)
+        problema = generar_problema_ext2()
+    elif extension == "ext3":
+        problema = generar_problema_ext3()
+    elif extension == "ext4":
+        problema = generar_problema_ext4()
+    elif extension == "ext5":
+        problema = generar_problema_ext5()
     else:
-        print(f"Extension no válida: {extension}")
-        print("Extensiones válidas: base, ext1, ext2, ext3, ext4, ext5")
+        print(f"Extensión no válida: {extension}")
         sys.exit(1)
     
-    # Guardar archivo
-    archivo = f"problem-{extension}-gen.pddl"
-    with open(archivo, "w") as f:
-        f.write(contenido)
-    
-    print(f"✓ Generado: {archivo}")
-    
-    # Mostrar estadísticas
-    print(f"\nEstadísticas del problema generado:")
-    if "primeros])} - primero" in contenido:
-        num_primeros = contenido.count(" - primero")
-        num_segundos = contenido.count(" - segundo")
-        num_incomp = contenido.count("(incompatible ")
-        print(f"  - Primeros platos: {num_primeros}")
-        print(f"  - Segundos platos: {num_segundos}")
-        print(f"  - Incompatibilidades: {num_incomp}")
-        
-        if extension in ["ext3", "ext4", "ext5"] and "(primero-en-dia" in contenido:
-            num_obligatorios = contenido.count("-en-dia ")
-            print(f"  - Platos obligatorios: {num_obligatorios}")
+    # Escribir a archivo o mostrar por pantalla
+    if len(sys.argv) >= 3:
+        with open(sys.argv[2], 'w') as f:
+            f.write(problema)
+        print(f"Problema generado en: {sys.argv[2]}")
+    else:
+        print(problema)
+
+if __name__ == "__main__":
+    main()
