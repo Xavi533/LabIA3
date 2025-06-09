@@ -6,7 +6,7 @@
     crema-calabaza lentejas-estofadas arroz-tres-delicias tortilla-patatas paella - primero
     
     ; Platos segundos
-    bacalao-horno albondigas-salsa pechuga-plancha cordero-asado calamar-romana - segundo
+    bacalao-horno albondigas-salsa pechuga-plancha cordero-asado calamar-romana milanesa - segundo
     
     ; Días (jueves es constante)
     lunes martes miercoles jueves viernes - dia
@@ -18,8 +18,6 @@
   
   (:init
     ; Días necesitan menú
-    (dia-sin-menu lunes)
-    (dia-sin-menu martes)
     (dia-sin-menu miercoles)
     (dia-sin-menu jueves)
     (dia-sin-menu viernes)
@@ -32,7 +30,9 @@
     (siguiente-dia jueves viernes)
     
     ; Incompatibilidades
-    
+    (incompatible crema-calabaza albondigas-salsa)
+    (incompatible lentejas-estofadas bacalao-horno)
+    (incompatible tortilla-patatas cordero-asado)
     
     ; Tipos de primeros platos
     (es-tipo-primero paella arroz)
@@ -40,6 +40,7 @@
     (es-tipo-primero lentejas-estofadas legumbre)
     (es-tipo-primero arroz-tres-delicias arroz)
     (es-tipo-primero tortilla-patatas huevo)
+
     
     ; Tipos de segundos platos
     (es-tipo-segundo bacalao-horno pescado)
@@ -47,22 +48,19 @@
     (es-tipo-segundo pechuga-plancha carne)
     (es-tipo-segundo cordero-asado carne)
     (es-tipo-segundo calamar-romana frito)
+    (es-tipo-segundo milanesa frito)
 
     ; NUEVO: Asignación de platos a días
-    (primero-en-dia lunes paella)
-    (segundo-en-dia martes bacalao-horno)
-    (segundo-en-dia miercoles pechuga-plancha)
-    (primero-en-dia viernes tortilla-patatas)
-
-    (primero-usado paella)
-    (segundo-usado bacalao-horno)
-    (segundo-usado pechuga-plancha)
+    (primero-en-dia martes tortilla-patatas)
+    (not (dia-sin-menu martes))
     (primero-usado tortilla-patatas)
+    (dia-tiene-tipo-primero martes huevo)
 
-    (dia-tiene-tipo-primero lunes arroz)
-    (dia-tiene-tipo-segundo martes pescado)
-    (dia-tiene-tipo-segundo miercoles carne)
-    (dia-tiene-tipo-primero viernes huevo)
+   
+    (segundo-en-dia lunes bacalao-horno)
+    (not (dia-sin-menu lunes))
+    (segundo-usado bacalao-horno)
+    (dia-tiene-tipo-segundo lunes pescado)
   )
 
   (:goal 

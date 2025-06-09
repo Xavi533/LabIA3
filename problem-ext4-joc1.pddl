@@ -31,11 +31,6 @@
     (siguiente-dia miercoles jueves)
     (siguiente-dia jueves viernes)
     
-    ; Incompatibilidades (reducidas)
-    (incompatible paella fabada-asturiana)
-    (incompatible sopa-verduras salmon-plancha)
-    (incompatible gazpacho fabada-asturiana)
-    
     ; Tipos de platos
     (es-tipo-primero paella arroz)
     (es-tipo-primero sopa-verduras sopa)
@@ -56,11 +51,11 @@
     (= (calorias-primero macarrones) 550)
     (= (calorias-primero gazpacho) 250)
     
-    (= (calorias-segundo salmon-plancha) 700)
-    (= (calorias-segundo fabada-asturiana) 750)
-    (= (calorias-segundo pollo-asado) 650)
-    (= (calorias-segundo filete-ternera) 800)
-    (= (calorias-segundo merluza-salsa) 600)
+    (= (calorias-segundo salmon-plancha) 700) ; con ensalada-mixta
+    (= (calorias-segundo fabada-asturiana) 750) ; con gazpacho
+    (= (calorias-segundo pollo-asado) 650) ; con sopa-verduras
+    (= (calorias-segundo filete-ternera) 450) ; con macarrones
+    (= (calorias-segundo merluza-salsa) 400) ; con paella
   
   )
 

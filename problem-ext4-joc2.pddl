@@ -6,7 +6,7 @@
     crema-calabaza lentejas-estofadas arroz-tres-delicias tortilla-patatas paella - primero
     
     ; Platos segundos
-    bacalao-horno albondigas-salsa pechuga-plancha cordero-asado calamar-romana - segundo
+    bacalao-horno albondigas-salsa pechuga-plancha cordero-asado calamar-romana milanesa - segundo
     
     ; Días
     lunes martes miercoles jueves viernes - dia
@@ -33,6 +33,9 @@
     
     ; Incompatibilidades
     (incompatible paella albondigas-salsa)
+    (incompatible tortilla-patatas pechuga-plancha)
+    (incompatible tortilla-patatas albondigas-salsa)
+    (incompatible tortilla-patatas cordero-asado)
     (incompatible lentejas-estofadas calamar-romana)
     (incompatible crema-calabaza cordero-asado)
     
@@ -48,19 +51,28 @@
     (es-tipo-segundo pechuga-plancha carne)
     (es-tipo-segundo cordero-asado carne)
     (es-tipo-segundo calamar-romana frito)
+    (es-tipo-segundo milanesa frito)
     
+    ; Asignación de platos a días
+    (primero-en-dia miercoles tortilla-patatas)
+    (not (dia-sin-menu miercoles))
+    (primero-usado tortilla-patatas)
+    (dia-tiene-tipo-primero martes huevo)
+
     ; Calorías
     (= (calorias-primero paella) 650)
     (= (calorias-primero crema-calabaza) 400)
     (= (calorias-primero lentejas-estofadas) 500)
     (= (calorias-primero arroz-tres-delicias) 600)
     (= (calorias-primero tortilla-patatas) 450)
+
     
     (= (calorias-segundo bacalao-horno) 550)
     (= (calorias-segundo albondigas-salsa) 700)
     (= (calorias-segundo pechuga-plancha) 600)
     (= (calorias-segundo cordero-asado) 850)
     (= (calorias-segundo calamar-romana) 650)
+    (= (calorias-segundo milanesa) 700)
 
 
   )
