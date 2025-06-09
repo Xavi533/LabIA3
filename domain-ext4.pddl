@@ -45,7 +45,6 @@
   (:action asignar-dia-concreto-primero
   :parameters (?d - dia ?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato)
   :precondition (and
-    (dia-sin-menu ?d)
     (primero-en-dia ?d ?p)
     (not (segundo-usado ?s))
     (not (incompatible ?p ?s))
@@ -69,7 +68,6 @@
   (:action asignar-dia-concreto-segundo
   :parameters (?d - dia ?p - primero ?s - segundo ?tp - tipo-plato ?ts - tipo-plato)
   :precondition (and
-    (dia-sin-menu ?d)
     (segundo-en-dia ?d ?s)
     (not (primero-usado ?p))
     (not (incompatible ?p ?s))

@@ -2,19 +2,19 @@
   (:domain ricorico-ext3)
   
   (:objects
-    ; Platos primeros (paella es constante, no se declara aquí)
-    sopa-verduras ensalada-mixta macarrones gazpacho paella - primero
-    
-    ; Platos segundos
-    salmon-plancha fabada-asturiana pollo-asado filete-ternera merluza-salsa - segundo
-    
-    ; Días (jueves es constante, pero incluimos todos para el orden)
+    ; Primeros
+    crema-calabaza lentejas-estofadas arroz-tres-delicias fideos-marinera tortilla-patatas sopa-pescado ensalada-mixta gazpacho - primero
+
+    ; Segundos
+    bacalao-horno albondigas-salsa pechuga-plancha cordero-asado calamar-romana hamburguesa queso-cabra salchichas - segundo
+
+    ; Días
     lunes martes miercoles jueves viernes - dia
-    
+
     ; Tipos de plato
-    arroz sopa ensalada pasta - tipo-plato
-    pescado legumbre carne - tipo-plato
+    crema legumbre arroz pasta huevo pescado carne frito ensalada sopa - tipo-plato
   )
+
   (:init
     ; Días sin menú
     (dia-sin-menu lunes)
@@ -54,12 +54,31 @@
 
     ; Imposición del cliente: primeros
     (primero-en-dia lunes crema-calabaza)
+    (not (dia-sin-menu lunes))
+    (primero-usado crema-calabaza)
+    (dia-tiene-tipo-primero lunes crema)
+
     (primero-en-dia miercoles tortilla-patatas)
+    (not (dia-sin-menu miercoles))
+    (primero-usado tortilla-patatas)
+    (dia-tiene-tipo-primero miercoles huevo)
+
     (primero-en-dia viernes gazpacho)
+    (not (dia-sin-menu viernes))
+    (primero-usado gazpacho)
+    (dia-tiene-tipo-primero viernes sopa)
 
     ; Imposición del cliente: segundos
     (segundo-en-dia martes bacalao-horno)
+    (not (dia-sin-menu martes))
+    (segundo-usado bacalao-horno)
+    (dia-tiene-tipo-segundo martes pescado)
+
+
     (segundo-en-dia jueves albondigas-salsa)
+    (not (dia-sin-menu jueves))
+    (segundo-usado albondigas-salsa)
+    (dia-tiene-tipo-segundo jueves carne)
   )
 
   (:goal 
