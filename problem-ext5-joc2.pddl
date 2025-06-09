@@ -106,5 +106,5 @@
     )
   )
 
-  (:metric maximize (total-cost))
+  (:metric minimize (total-cost))
 )

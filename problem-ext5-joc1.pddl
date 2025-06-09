@@ -113,5 +113,5 @@
   )
 
   ;; Puedes seguir usando maximize o cambiar a minimize según tu experimento
-  (:metric maximize (total-cost))
+  (:metric minimize (total-cost))
 )
