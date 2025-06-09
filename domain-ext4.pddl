@@ -11,8 +11,6 @@
   (:predicates
     ; Predicados básicos
     (incompatible ?p - primero ?s - segundo)
-    (dia-tiene-primero ?d - dia ?p - primero)
-    (dia-tiene-segundo ?d - dia ?s - segundo)
     (dia-asignado ?d - dia)
     (dia-sin-menu ?d - dia)
     
@@ -41,7 +39,6 @@
     ; Funciones para calorías
     (calorias-primero ?p - primero)
     (calorias-segundo ?s - segundo)
-    (calorias-dia ?d - dia)  ; Más genérico que tener una función por día
   )
 
 
@@ -60,18 +57,12 @@
       (<= (+ (calorias-primero ?p) (calorias-segundo ?s)) 1500)
   )
   :effect (and
-    (dia-tiene-primero ?d ?p)
-    (dia-tiene-segundo ?d ?s)
     (dia-asignado ?d)
     (not (dia-sin-menu ?d))
     (primero-usado ?p)
     (segundo-usado ?s)
     (dia-tiene-tipo-primero ?d ?tp)
     (dia-tiene-tipo-segundo ?d ?ts)
-
-     ; NUEVO: Registrar calorías
-      (increase (calorias-dia ?d) 
-                (+ (calorias-primero ?p) (calorias-segundo ?s)))
   )
 )
 
@@ -90,18 +81,12 @@
       (<= (+ (calorias-primero ?p) (calorias-segundo ?s)) 1500)
   )
   :effect (and
-    (dia-tiene-primero ?d ?p)
-    (dia-tiene-segundo ?d ?s)
     (dia-asignado ?d)
     (not (dia-sin-menu ?d))
     (primero-usado ?p)
     (segundo-usado ?s)
     (dia-tiene-tipo-primero ?d ?tp)
     (dia-tiene-tipo-segundo ?d ?ts)
-
-     ; NUEVO: Registrar calorías
-      (increase (calorias-dia ?d) 
-                (+ (calorias-primero ?p) (calorias-segundo ?s)))
   )
 )
 
@@ -126,8 +111,6 @@
     )
     :effect (and
       ; Efectos básicos
-      (dia-tiene-primero ?d ?p)
-      (dia-tiene-segundo ?d ?s)
       (dia-asignado ?d)
       (not (dia-sin-menu ?d))
       
@@ -138,10 +121,6 @@
       ; Registrar tipos del día
       (dia-tiene-tipo-primero ?d ?tp)
       (dia-tiene-tipo-segundo ?d ?ts)
-
-       ; NUEVO: Registrar calorías
-      (increase (calorias-dia ?d) 
-                (+ (calorias-primero ?p) (calorias-segundo ?s)))
     )
   )
 
@@ -171,17 +150,12 @@
       (<= (+ (calorias-primero ?p) (calorias-segundo ?s)) 1500)
     )
     :effect (and
-      (dia-tiene-primero ?d ?p)
-      (dia-tiene-segundo ?d ?s)
       (dia-asignado ?d)
       (not (dia-sin-menu ?d))
       (primero-usado ?p)
       (segundo-usado ?s)
       (dia-tiene-tipo-primero ?d ?tp)
       (dia-tiene-tipo-segundo ?d ?ts)
-      ; NUEVO: Registrar calorías
-      (increase (calorias-dia ?d) 
-                (+ (calorias-primero ?p) (calorias-segundo ?s)))
     )
   )
 )

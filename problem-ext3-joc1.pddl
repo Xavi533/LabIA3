@@ -15,58 +15,51 @@
     arroz sopa ensalada pasta - tipo-plato
     pescado legumbre carne - tipo-plato
   )
-  
   (:init
-    ; Días necesitan menú
+    ; Días sin menú
     (dia-sin-menu lunes)
     (dia-sin-menu martes)
     (dia-sin-menu miercoles)
     (dia-sin-menu jueves)
     (dia-sin-menu viernes)
-    
-    ; Definir orden de días
+
+    ; Orden de días
     (primer-dia lunes)
     (siguiente-dia lunes martes)
     (siguiente-dia martes miercoles)
     (siguiente-dia miercoles jueves)
     (siguiente-dia jueves viernes)
-    
-    ; Incompatibilidades
-    (incompatible paella fabada-asturiana)
-    (incompatible macarrones fabada-asturiana)
-    (incompatible sopa-verduras salmon-plancha)
-    (incompatible sopa-verduras merluza-salsa)
-    (incompatible gazpacho fabada-asturiana)
-    (incompatible gazpacho filete-ternera)
-    
-    ; Tipos de primeros platos
-    (es-tipo-primero paella arroz)
-    (es-tipo-primero sopa-verduras sopa)
+
+    ; Tipos de primeros
+    (es-tipo-primero crema-calabaza crema)
+    (es-tipo-primero lentejas-estofadas legumbre)
+    (es-tipo-primero arroz-tres-delicias arroz)
+    (es-tipo-primero fideos-marinera pasta)
+    (es-tipo-primero tortilla-patatas huevo)
+    (es-tipo-primero sopa-pescado sopa)
     (es-tipo-primero ensalada-mixta ensalada)
-    (es-tipo-primero macarrones pasta)
     (es-tipo-primero gazpacho sopa)
-    
-    ; Tipos de segundos platos
-    (es-tipo-segundo salmon-plancha pescado)
-    (es-tipo-segundo fabada-asturiana legumbre)
-    (es-tipo-segundo pollo-asado carne)
-    (es-tipo-segundo filete-ternera carne)
-    (es-tipo-segundo merluza-salsa pescado)
 
-    ; Asignación de platos a días
-    (primero-en-dia lunes paella)
-    (primero-en-dia miercoles ensalada-mixta)
+    ; Tipos de segundos
+    (es-tipo-segundo bacalao-horno pescado)
+    (es-tipo-segundo albondigas-salsa carne)
+    (es-tipo-segundo pechuga-plancha carne)
+    (es-tipo-segundo cordero-asado carne)
+    (es-tipo-segundo calamar-romana frito)
+    (es-tipo-segundo hamburguesa carne)
+    (es-tipo-segundo queso-cabra frito)
+    (es-tipo-segundo salchichas carne)
 
+    ; Ignoramos incompatibilidades en esta prueba
+
+    ; Imposición del cliente: primeros
+    (primero-en-dia lunes crema-calabaza)
+    (primero-en-dia miercoles tortilla-patatas)
     (primero-en-dia viernes gazpacho)
-    (primero-usado paella)
 
-    (primero-usado ensalada-mixta)
-
-    (primero-usado gazpacho)
-
-    (dia-tiene-tipo-primero lunes arroz)
-    (dia-tiene-tipo-primero miercoles ensalada)
-    (dia-tiene-tipo-primero viernes sopa)
+    ; Imposición del cliente: segundos
+    (segundo-en-dia martes bacalao-horno)
+    (segundo-en-dia jueves albondigas-salsa)
   )
 
   (:goal 

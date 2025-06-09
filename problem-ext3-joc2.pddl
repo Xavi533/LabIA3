@@ -32,11 +32,7 @@
     (siguiente-dia jueves viernes)
     
     ; Incompatibilidades
-    (incompatible paella albondigas-salsa)
-    (incompatible paella cordero-asado)
-    (incompatible lentejas-estofadas albondigas-salsa)
-    (incompatible tortilla-patatas calamar-romana)
-    (incompatible crema-calabaza cordero-asado)
+    
     
     ; Tipos de primeros platos
     (es-tipo-primero paella arroz)
@@ -51,6 +47,22 @@
     (es-tipo-segundo pechuga-plancha carne)
     (es-tipo-segundo cordero-asado carne)
     (es-tipo-segundo calamar-romana frito)
+
+    ; NUEVO: Asignación de platos a días
+    (primero-en-dia lunes paella)
+    (segundo-en-dia martes bacalao-horno)
+    (segundo-en-dia miercoles pechuga-plancha)
+    (primero-en-dia viernes tortilla-patatas)
+
+    (primero-usado paella)
+    (segundo-usado bacalao-horno)
+    (segundo-usado pechuga-plancha)
+    (primero-usado tortilla-patatas)
+
+    (dia-tiene-tipo-primero lunes arroz)
+    (dia-tiene-tipo-segundo martes pescado)
+    (dia-tiene-tipo-segundo miercoles carne)
+    (dia-tiene-tipo-primero viernes huevo)
   )
 
   (:goal 

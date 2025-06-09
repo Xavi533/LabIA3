@@ -18,14 +18,6 @@
     (dia-sin-menu jueves)
     (dia-sin-menu viernes)
     
-    ; Incompatibilidades (las mismas del nivel básico)
-    (incompatible paella fabada-asturiana)
-    (incompatible macarrones fabada-asturiana)
-    (incompatible sopa-verduras salmon-plancha)
-    (incompatible sopa-verduras merluza-salsa)
-    (incompatible gazpacho fabada-asturiana)
-    (incompatible gazpacho filete-ternera)
-    
     ; Los platos empiezan sin usar (implícito por ausencia del predicado)
   )
 

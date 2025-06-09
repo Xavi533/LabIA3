@@ -11,8 +11,6 @@
   (:predicates
     ; Predicados básicos
     (incompatible ?p - primero ?s - segundo)
-    (dia-tiene-primero ?d - dia ?p - primero)
-    (dia-tiene-segundo ?d - dia ?s - segundo)
     (dia-asignado ?d - dia)
     (dia-sin-menu ?d - dia)
     
@@ -48,8 +46,6 @@
     (es-tipo-segundo ?s ?ts)
   )
   :effect (and
-    (dia-tiene-primero ?d ?p)
-    (dia-tiene-segundo ?d ?s)
     (dia-asignado ?d)
     (not (dia-sin-menu ?d))
     (primero-usado ?p)
@@ -70,8 +66,6 @@
     (es-tipo-segundo ?s ?ts)
   )
   :effect (and
-    (dia-tiene-primero ?d ?p)
-    (dia-tiene-segundo ?d ?s)
     (dia-asignado ?d)
     (not (dia-sin-menu ?d))
     (primero-usado ?p)
@@ -97,8 +91,6 @@
     )
     :effect (and
       ; Efectos básicos
-      (dia-tiene-primero ?d ?p)
-      (dia-tiene-segundo ?d ?s)
       (dia-asignado ?d)
       (not (dia-sin-menu ?d))
       
@@ -138,8 +130,6 @@
         )
     )
     :effect (and
-      (dia-tiene-primero ?d ?p)
-      (dia-tiene-segundo ?d ?s)
       (dia-asignado ?d)
       (not (dia-sin-menu ?d))
       (primero-usado ?p)

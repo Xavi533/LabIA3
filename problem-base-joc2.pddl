@@ -3,10 +3,10 @@
   
   (:objects
     ; Platos primeros disponibles (conjunto diferente)
-    crema-calabaza lentejas-estofadas arroz-tres-delicias fideos-marinera tortilla-patatas - primero
+    crema-calabaza lentejas-estofadas arroz-tres-delicias  - primero
     
     ; Platos segundos disponibles (conjunto diferente)
-    bacalao-horno albondigas-salsa pechuga-plancha cordero-asado calamar-romana - segundo
+    bacalao-horno albondigas-salsa pechuga-plancha  - segundo
     
     ; Días laborables de la semana
     lunes martes miercoles jueves viernes - dia
@@ -20,20 +20,16 @@
     (dia-sin-menu jueves)
     (dia-sin-menu viernes)
     
-    ; Incompatibilidades diferentes para probar otros escenarios
-    ; Platos muy pesados no combinan
+    (incompatible crema-calabaza bacalao-horno)
+    (incompatible crema-calabaza albondigas-salsa)
+
+    (incompatible lentejas-estofadas bacalao-horno)
     (incompatible lentejas-estofadas albondigas-salsa)
-    (incompatible lentejas-estofadas cordero-asado)
-    
-    ; Frituras no combinan bien
-    (incompatible tortilla-patatas calamar-romana)
-    
-    ; Fideos marinera (con marisco) no combina con carnes pesadas
-    (incompatible fideos-marinera cordero-asado)
-    (incompatible fideos-marinera albondigas-salsa)
-    
-    ; Crema suave no va bien con platos muy contundentes
-    (incompatible crema-calabaza cordero-asado)
+    (incompatible lentejas-estofadas pechuga-plancha)
+
+    (incompatible arroz-tres-delicias pechuga-plancha)
+    (incompatible arroz-tres-delicias bacalao-horno)
+    (incompatible arroz-tres-delicias albondigas-salsa)
   )
 
   (:goal 
